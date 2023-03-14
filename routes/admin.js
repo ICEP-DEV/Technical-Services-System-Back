@@ -4,25 +4,34 @@ module.exports = app => {
 
   const connection = dbConnection();
 
-  app.get('/news', (req, res) => {
+  app.get("/request", (req, res) => {
     connection.query('SELECT * FROM work_request', (err, result) => {
-      res.render('request/request', {
-        request: result
-      });
+      if(err)
+      {
+          console.log(err,'errs');
+      }
+      if(result.length>0)
+      {
+          res.send({
+              message:'all user data',
+              data:result
+          });
+      }
     });
   });
 
-  app.post('/request', (req, res) => {
-    const { description, category,venue,image } = req.body;
-    connection.query('INSERT INTO work_request SET ? ',
-      {
-        description,
-        category,
-        venue,
-        image
+  ////CREATE A REQUEST
+  app.post("/request", (req, res) => {
+    const { description,date, category,priority,location,image } = req.body;
+    req.body.date=new date;
+    const sql= `INSERT INTO user (description,date, category,priority,location,image)
+    VALUES ('${description}','${date}', '${category}','${priority}','${location}','${image}')`;
+    connection.query(sql, (err, res)=> {
+      if(err){
+        throw err
+      }else{
+        res.send('Work request created');
       }
-    , (err, result) => {
-      res.redirect('/request');
-    });
+   })
   });
 };
