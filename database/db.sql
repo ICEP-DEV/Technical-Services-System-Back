@@ -34,7 +34,7 @@ INSERT INTO administrator(admin_name,gender,email,phone)
 VALUE('Mike','male','mkike234@gmail.com','0124578987');
 
 CREATE TABLE work_request(
- id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
+ id INT NOT NULL PRIMARY KEY,
  description TEXT,
  req_date date,
  category VARCHAR(45),
@@ -45,8 +45,8 @@ CREATE TABLE work_request(
  FOREIGN KEY (admin_id) REFERENCES administrator(id)
 );
 
-INSERT INTO work_request(description,req_date,category,priority,admin_id)
-VALUES('Leaking taps','06-03-2023','Plumbing','',1);
+INSERT INTO work_request(id,description,req_date,category,priority,admin_id)
+VALUES(1678884550556,'Leaking taps','06-03-2023','Plumbing','',1);
 
 CREATE TABLE division(
  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,

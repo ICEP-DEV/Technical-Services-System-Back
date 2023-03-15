@@ -4,8 +4,10 @@ module.exports = app => {
 
   const connection = dbConnection();
 
+///VIEW REQUESTS
   app.get("/request", (req, res) => {
-    connection.query('SELECT * FROM work_request', (err, result) => {
+    sql='SELECT * FROM work_request';
+    connection.query(sql, (err, result) => {
       if(err)
       {
           console.log(err,'errs');
@@ -21,17 +23,22 @@ module.exports = app => {
   });
 
   ////CREATE A REQUEST
+  
   app.post("/request", (req, res) => {
-    const { description,date, category,priority,location,image } = req.body;
-    req.body.date=new date;
-    const sql= `INSERT INTO user (description,date, category,priority,location,image)
-    VALUES ('${description}','${date}', '${category}','${priority}','${location}','${image}')`;
+    const { id,description,date, category,priority,location,image } = req.body;
+    req.body.date=new date().toISOString().slice(0, 10);
+    req.body.id=Date.now();
+    const sql= `INSERT INTO work_request (description,date, category,priority,location,image)
+    VALUES ('${id},${description}','${date}', '${category}','${priority}','${location}','${image}')`;
     connection.query(sql, (err, res)=> {
       if(err){
-        throw err
+        throw err;
+        res.send('Could not submitted a request');
       }else{
-        res.send('Work request created');
+        res.send('Work request submitted');
       }
    })
   });
 };
+
+//**/
