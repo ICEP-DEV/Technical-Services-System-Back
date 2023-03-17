@@ -41,12 +41,13 @@ CREATE TABLE work_request(
  priority VARCHAR(45),
  location VARCHAR(45),
  image BLOB,
+ progress VARCHAR(45),
  admin_id INT,
  FOREIGN KEY (admin_id) REFERENCES administrator(id)
 );
 
-INSERT INTO work_request(id,description,req_date,category,priority,admin_id)
-VALUES(1678884550556,'Leaking taps','06-03-2023','Plumbing','',1);
+INSERT INTO work_request(id,description,req_date,category,priority,location,image,progress,admin_id)
+VALUES(1678884550556,'Leaking taps','06-03-2023','Plumbing','High','10-g28','','',1);
 
 CREATE TABLE division(
  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
@@ -71,7 +72,7 @@ INSERT INTO technician(name,phone,gender,availability,division_id)
 VALUES('John','0124578987','male','available',1);
 
 CREATE TABLE work_order(
-	id INT PRIMARY KEY AUTO_INCREMENT NOT NULL,
+	id INT PRIMARY KEY NOT NULL,
 	request_id INT,
 	description TEXT,
 	priority VARCHAR(45),
@@ -85,7 +86,16 @@ CREATE TABLE work_order(
 );
 
 INSERT INTO work_order(request_id,description,priority,category,status,tech_id,admin_id)
-VALUES('1','Leaking taps','high','plumbing','in-process',1,1);
+VALUES(1678884550556,'Leaking taps','high','plumbing','in-process',1,1);
 
+CREATE TABLE staff_feedback(
+id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
+feedback TEXT,
+tech_rating INT,
+request_id INT,
+staff_id INT,
+FOREIGN KEY (request_id) REFERENCES work_request(id),
+FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
+);
 
 
