@@ -24,12 +24,10 @@ module.exports = app => {
                                                           ////CREATE A REQUEST
   
   app.post("/request", (req, res) => {
-    let { id,description,date, category,priority,location,image } = req.body;
-    req.body.date=new date().toISOString().slice(0, 10);/////The curennt date to be added to database
-    req.body.id=Date.now();////The creation of a unique id 
-    const sql= `INSERT INTO work_request (id,description,date, category,priority,location,image)
-    VALUES ('${id},${description}','${date}', '${category}','${priority}','${location}','${image}')`;
-    connection.query(sql, (err, res)=> {
+    let ref_number= Date.now();
+    let data = {id:ref_number,description: req.body.description,req_date: new Date().toISOString().slice(0, 10), category: req.body.category,location:req.body.location,image:req.body.image};
+     let sql = "INSERT INTO work_request SET ?";
+    connection.query(sql,data, (err, res)=> {
       if(err){
         throw err;
         res.send('Could not submitted a request');
@@ -79,5 +77,20 @@ app.get("/request/:id",(req,res)=>{
     res.send(result);
     })
 });
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                                       VIEW AVAILABLE TECHNICIANS*/
+app.get('/technician',(req,res)=>{
+  const sql="SELECT * FROM technician t,work_order w WHERE t.id= w.task_id AND t.progress_status='completed' ";
+  connection.query(sql,(err,result)=>{
+    if(err){
+      console.log(err.message);
+      throw err;
+  }
+  res.send(result);
+  })
+})            
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                     /*ASSIGN A TECHNICIAN*/
 };
 
