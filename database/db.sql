@@ -77,7 +77,7 @@ INSERT INTO technician(name,phone,gender,availability,division_id)
 VALUES('John','0124578987','male','available',1);
 
 CREATE TABLE work_order(
-	id INT PRIMARY KEY NOT NULL,
+	id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
 	request_id BIGINT,
 	description TEXT,
 	priority VARCHAR(45),

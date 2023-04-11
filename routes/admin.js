@@ -1,4 +1,5 @@
 const dbConnection = require('../config/connection');
+const { body } = require('express-validator');
 
 module.exports = app => {
   const connection = dbConnection();
@@ -26,7 +27,7 @@ module.exports = app => {
   app.post("/request", (req, res) => {
     let ref_number= Date.now();
     let data = {id:ref_number,description: req.body.description,req_date: new Date().toISOString().slice(0, 10), category: req.body.category,location:req.body.location,image:req.body.image};
-     let sql = "INSERT INTO work_request SET ?";
+    let sql = "INSERT INTO work_request SET ?";
     connection.query(sql,data, (err, res)=> {
       if(err){
         throw err;
@@ -80,7 +81,7 @@ app.get("/request/:id",(req,res)=>{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       VIEW AVAILABLE TECHNICIANS*/
 app.get('/technician',(req,res)=>{
-  const sql="SELECT * FROM technician t,work_order w WHERE t.id= w.task_id AND t.progress_status='completed' ";
+  const sql="SELECT * FROM technician WHERE availability='available'";
   connection.query(sql,(err,result)=>{
     if(err){
       console.log(err.message);
@@ -92,5 +93,14 @@ app.get('/technician',(req,res)=>{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
+app.post('/assign',(res,req)=>{
+  const sql="UPDATE work_order SET technician= ? WHERE id=?";
+  connection.query(sql,(err,result)=>{
+    if(res){
+      throw err;
+    }
+    res.send(result);
+  })
+  })
 };
 
