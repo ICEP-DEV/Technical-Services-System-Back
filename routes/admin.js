@@ -1,8 +1,9 @@
 const dbConnection = require('../config/connection');
-const { body } = require('express-validator');
+
 
 module.exports = app => {
   const connection = dbConnection();
+ 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                                         ///VIEW ALL REQUESTS
   app.get("/request", (req, res) => {
@@ -21,39 +22,6 @@ module.exports = app => {
       }
     });
   });
-  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                          ////CREATE A REQUEST
-  
-  app.post("/request", (req, res) => {
-    let ref_number= Date.now();
-    let data = {id:ref_number,description: req.body.description,req_date: new Date().toISOString().slice(0, 10), category: req.body.category,location:req.body.location,image:req.body.image};
-    let sql = "INSERT INTO work_request SET ?";
-    connection.query(sql,data, (err, res)=> {
-      if(err){
-        throw err;
-        res.send('Could not submitted a request');
-      }else{
-        res.send('Work request submitted');
-      }
-   })
-  });
-
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                            ///STAFF SENDING FEEDBACK///
-  app.post("/feedback",(req,res)=>{
-   let{feedback,technician}=req.body;
-    const sql=`INSERT INTO staff_feedback(feedback,tech_rating) VALUES ('${feeback}','${tech_rating}')`;
-    connection.query(sql,(err,result)=>{
-      if(err){
-        throw err;
-        res.send('Could not process feedback');
-      }else{
-        res.send('feedback submitted');
-      } 
-    })
-  });
-
-
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                         ////THE ADIM SETS THE PRIOTY OF THE REQUEST
 
@@ -81,7 +49,7 @@ app.get("/request/:id",(req,res)=>{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       VIEW AVAILABLE TECHNICIANS*/
 app.get('/technician',(req,res)=>{
-  const sql="SELECT * FROM technician WHERE availability='available'";
+  const sql="SELECT name, surname FROM technician WHERE availability='available'";
   connection.query(sql,(err,result)=>{
     if(err){
       console.log(err.message);
@@ -94,13 +62,26 @@ app.get('/technician',(req,res)=>{
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
 app.post('/assign',(res,req)=>{
-  const sql="UPDATE work_order SET technician= ? WHERE id=?";
+  const sql="UPDATE work_request SET tech_id=?";
   connection.query(sql,(err,result)=>{
-    if(res){
+    if(err){
       throw err;
     }
     res.send(result);
   })
   })
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /**                                          VIEW TECHNICIAN PROGRESS                                                      */
+ app.get('/progresStatus',(req,res)=>{
+  const sql ="SELECT a.id,a.progress FROM work_request a, technician t WHERE a.tech_id = t.id;";
+  connection.query(sql,(err,result)=>{
+    if(err){
+      throw err;
+    }
+    res.send(result);
+  })
+ }) 
+
 };
+
 
