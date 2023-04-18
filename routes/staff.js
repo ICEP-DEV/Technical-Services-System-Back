@@ -6,7 +6,7 @@ module.exports = app => {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                           ////CREATE A REQUEST
   
-app.post("/request", (req, res) => {
+app.post("/createRequest", (req, res) => {
     let ref_number= Date.now();
     let data = {id:ref_number,
     description: req.body.description,
@@ -15,30 +15,40 @@ app.post("/request", (req, res) => {
     location:req.body.location,
     image:req.body.image};
   let sql = `INSERT INTO work_request SET ?`;
-  connection.query(sql,data, (err, res)=> {
+  connection.query(sql,data, (err,res)=> {
      if(err){
      throw err;
-         res.send('Could not submitted a request');
       }else{
         res.send('Work request submitted');
      }
   })
 });
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                            ///VIEW PROGRESS OF RERQUEST///
+app.get('/progresStatus',(req,res)=>{
+  let ref_number=req.body.ref_number;
+  const sql=`SELECT id,progess FROM work_request WHERE id= "${ref_number}"`;
+  connection.query(sql,(err,res)=>{
+    if(err){
+      throw err;
+       }else{
+         res.send(result);
+      }
+  })
+});
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                             ///STAFF SENDING FEEDBACK///
   app.post("/feedback",(req,res)=>{
-   let{feedback,rating,id}=req.body;
+   let{staff_feedback,rating,id}=req.body;
     const sql=`UPDATE work_request
-            SET feedback= ?
+            SET staff_feedback= ?
                 ,rating =?
             WHERE id=?`;
-    connection.query(sql,[feedback,rating,id],(err,result)=>{
+    connection.query(sql,[staff_feedback,rating,id],(err,result)=>{
       if(err){
-        throw err;
         res.send('Could not process feedback');
       }else{
-        res.send('feedback submitted');
+        res.send('Feedback submitted');
       } 
     })
   });

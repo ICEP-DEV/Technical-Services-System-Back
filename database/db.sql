@@ -1,5 +1,3 @@
-
-
 CREATE TABLE staff(
 staff_id INT AUTO_INCREMENT NOT NULL PRIMARY KEY,
 staff_name VARCHAR(45),
@@ -42,6 +40,7 @@ CREATE TABLE technician(
   name VARCHAR(45),
   surname VARCHAR(45),
   phone CHAR(10),
+  email VARCHAR(45),
   gender ENUM('male', 'female'),
   availability ENUM('available', 'busy') NOT NULL,
   division_id INT,
@@ -49,8 +48,8 @@ CREATE TABLE technician(
   FOREIGN KEY (division_id) REFERENCES division(id)
 );
 
-INSERT INTO technician(name,phone,gender,availability,division_id)
-VALUES('John','0124578987','male','available',1);
+INSERT INTO technician(name,surname,phone,email,gender,availability,division_id)
+VALUES('John','Black','0124578987','john@tut.ac.za','male','available',1);
 
 CREATE TABLE work_request(
  id BIGINT NOT NULL PRIMARY KEY,
@@ -61,16 +60,19 @@ CREATE TABLE work_request(
  venue VARCHAR(45),
  image BLOB,
  progress VARCHAR(45),
- feedback VARCHAR(45),
+ staff_feedback VARCHAR(45),
+ tech_feedback VARCHAR(45),
  rating VARCHAR(45),
  admin_id INT,
  tech_id INT,
+ staff_id INT,
  FOREIGN KEY (tech_id) REFERENCES technician(id),
- FOREIGN KEY (admin_id) REFERENCES administrator(id)
+ FOREIGN KEY (admin_id) REFERENCES administrator(id),
+ FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
 );
 
-INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,admin_id,tech_id)
-VALUES(1678884550556,'Leaking taps','06-03-2023','Plumbing','High','10-g28','','',1,1);
+INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,admin_id,tech_id,staff_id)
+VALUES(1678884550556,'Leaking taps','06-03-2023','Plumbing','High','10-g28','','',1,1,1);
 
 
 
