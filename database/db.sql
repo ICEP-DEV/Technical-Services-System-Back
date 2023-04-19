@@ -44,6 +44,7 @@ CREATE TABLE technician(
   gender ENUM('male', 'female'),
   availability ENUM('available', 'busy') NOT NULL,
   division_id INT,
+  campus VARCHAR(45),
   password VARCHAR(45),
   FOREIGN KEY (division_id) REFERENCES division(id)
 );

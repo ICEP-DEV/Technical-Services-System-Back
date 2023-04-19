@@ -5,7 +5,7 @@ module.exports = app => {
   const connection = dbConnection();
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                     TECHNICIAN VIEWS TASKS ASSIGNED THEM                                                    */  
-  app.get('/myTasks',(req,res)=>{
+  app.get('technician/tasks',(req,res)=>{
     const sql="SELECT w.description, w.priority, w.venue, w.category FROM work_request w,technician t WHERE w.tech_id = t.id;"
     connection.query(sql,(err,result)=>{
       if(err){
@@ -17,7 +17,7 @@ module.exports = app => {
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**                                     TECHNICIAN UPDATE THEIR PROGRESS OF TASK                                                 */
-  app.post('/updateTask:tech_id',(req,res)=>{
+  app.post('technician/updateTask:tech_id',(req,res)=>{
     let status=req.body.status;
     const sql="UPDATE work_order SET status=? WHERE tech_id=? ";
     connection.query(sql,status,(err,result)=>{
@@ -29,7 +29,7 @@ module.exports = app => {
   })
      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**                                     TECHNICIAN LOG-IN AUTHENTICATION                                                */
-   app.post('/adminLogin',(req,res)=>{
+   app.post('/technician/adminLogin',(req,res)=>{
       let technician_email=req.body.technician_email;
       let password=req.body.password;
       const sql=`SELECT * FROM technician WHERE email="${admin_email}"`;
@@ -54,7 +54,7 @@ module.exports = app => {
     });
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /*                                        TECHNICIAN VIEWS GIVEN STAFF FEEDBACK                                                                 */
-    app.get('/ViewFeedback:tech_id',(req,res)=>{
+    app.get('technician/ViewFeedback:tech_id',(req,res)=>{
       const sql=`SELECT s.name,s.surname,w.staff_feedback,w.rating, FROM work_request w,staff s WHERE s.staff_id =w.staff_id AND tech_id= ?`;
       connection.query(sql,(err,result)=>{
         if(err){
@@ -65,7 +65,7 @@ module.exports = app => {
     });
      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
    /*                                        TECH GIVES FEEDBACK REGARDING TASK                                                               */
-  app.post('/Feedback/technician:id',(req,res)=>{
+  app.post('admin/feedback:id',(req,res)=>{
     let tech_feedback=body.req.tech_feedback;
     const sql=`UPDATE work_request
             SET tech_feedback= ?

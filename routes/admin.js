@@ -7,7 +7,7 @@ module.exports = app => {
  
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                                         ///VIEW ALL REQUESTS
-  app.get("/request", (req, res) => {
+  app.get("/admin/ViewAllrequest", (req, res) => {
     sql=`SELECT w.id, w.description,w.category,w.req_date, s.staff_name,s.campus,w.image 
          FROM work_request w,staff s 
          WHERE s.staff_id=w.staff_id`;
@@ -19,7 +19,7 @@ module.exports = app => {
       if(result.length>0)
       {
           res.send({
-              data:result
+              result:result
           });
       }
     });
@@ -27,7 +27,7 @@ module.exports = app => {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                         ////THE ADIM SETS THE PRIORITY OF THE REQUEST
 
-app.put("/setPriority/:id",(req,res)=>{
+app.post("/admin/setPriority/:id",(req,res)=>{
   const sql="UPDATE work_request SET priority=? WHERE id=?";
   connection.query(sql,(err,result)=>{
     if(err){
@@ -39,7 +39,7 @@ app.put("/setPriority/:id",(req,res)=>{
 })
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                           ////VIEWING A SPECIFIC REQUEST
-app.get("/request/:id",(req,res)=>{
+app.get("/admin/viewRequest/:id",(req,res)=>{
     connection.query('SELECT * FROM work_request WHERE id = ?',req.body.id,(err,result)=>{
       if(err){
         console.log(err.message);
@@ -50,7 +50,7 @@ app.get("/request/:id",(req,res)=>{
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       VIEW AVAILABLE TECHNICIANS*/
-app.get('/technician',(req,res)=>{
+app.get('/admin/availableTechnician',(req,res)=>{
   const sql="SELECT name, surname FROM technician WHERE availability='available'";
   connection.query(sql,(err,result)=>{
     if(err){
@@ -63,7 +63,7 @@ app.get('/technician',(req,res)=>{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
-app.post('/assign:id',(res,req)=>{
+app.post('/admin/assign:id',(res,req)=>{
   const sql="UPDATE work_request SET id=?";
   connection.query(sql,(err,result)=>{
     if(err){
@@ -74,7 +74,7 @@ app.post('/assign:id',(res,req)=>{
   })
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                          VIEW TECHNICIAN PROGRESS                                                      */
- app.get('/progresStatus',(req,res)=>{
+ app.get('/admin/progresStatus',(req,res)=>{
   const sql ="SELECT a.id,a.progress FROM work_request a, technician t WHERE a.tech_id = t.id;";
   connection.query(sql,(err,result)=>{
     if(err){
@@ -85,7 +85,7 @@ app.post('/assign:id',(res,req)=>{
  }); 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  /**                                          VIEW FEEDBACK                                                    */
- app.get('/feedback',(req,res)=> {
+ app.get('/admin/viewFeedback',(req,res)=> {
   const sql=`SELECT s.name,s.surname,w.staff_feedback,w.tech_feedback,w.rating,t.name,t.surname
              FROM staff s,work_request w,technician t
              WHERE s.staff_id=w.staff_id AND t.id=w.tech_id`;
@@ -98,7 +98,7 @@ app.post('/assign:id',(res,req)=>{
  });
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                  VIEW IN-PROGRESS TASKS                                                                    */
-app.get('/viewInProgressTasks',(req,res)=>{
+app.get('/admin/viewInProgressTasks',(req,res)=>{
  const sql=`SELECT l.id,l.description,t.name,l.progress,s.staff_name 
             FROM technician t,work_request l,staff s 
             WHERE l.tech_id=t.id AND l.staff_id=s.staff_id AND l.progress='In-Progress' `;
@@ -111,7 +111,7 @@ app.get('/viewInProgressTasks',(req,res)=>{
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                VIEW COMPLETED TASKS                                                                           */
-app.get('/viewInCompletedTasks',(req,res)=>{
+app.get('/admin/viewInCompletedTasks',(req,res)=>{
   const sql=`SELECT l.id,l.description,t.name,l.progress,s.staff_name 
             FROM technician t,work_request l,staff s 
             WHERE l.tech_id=t.id AND l.staff_id=s.staff_id AND l.progress='Completed' `;
@@ -124,7 +124,7 @@ app.get('/viewInCompletedTasks',(req,res)=>{
  });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                                 ADD  TECHNICIAN                                                                                */
-app.post('/Technician/addTechnician',(req,res)=>{
+app.post('/admin/addTechnician',(req,res)=>{
   let data={
     id:req.body.id,
     name:req.body.name,
@@ -143,7 +143,7 @@ app.post('/Technician/addTechnician',(req,res)=>{
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                             VIEW ALL TECHNICIAN IN THE SYSTEM                                                             */
-app.get('/Technician/viewAllTechnicans',(req,res)=>{
+app.get('/admin/viewAllTechnicans',(req,res)=>{
   const sql= `SELECT t.id,t.name,t.surname,t.phone,t.email,d.division_name  
               FROM technician t,division d
               WHERE t.division_id =d.id`;
@@ -160,7 +160,7 @@ app.get('/Technician/viewAllTechnicans',(req,res)=>{
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                            (1) RETRIEVE TOTAL NUMBER OF TASKS                                                           */
-app.get('/TotalRequests',(req,res)=>{
+app.get('/admin/totalRequests',(req,res)=>{
   const sql=`SELECT COUNT(id) AS total_requests
             FROM work_request;`
   connection.query(sql,(err,result)=>{
@@ -176,7 +176,7 @@ app.get('/TotalRequests',(req,res)=>{
 })
  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  /*                                              LOGIN-AUTHENTICATION                                                                            */
-app.post('/adminLogin',(req,res)=>{
+app.post('/admin/login',(req,res)=>{
   let admin_email=req.body.admin_email;
   let password=req.body.password;
   const sql=`SELECT * FROM administrator WHERE email="${admin_email}"`;
