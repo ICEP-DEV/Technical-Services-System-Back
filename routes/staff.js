@@ -19,7 +19,7 @@ app.post("/staff/createRequest", (req, res) => {
      if(err){
      throw err;
       }else{
-        res.send('Work request submitted');
+        res.send({message:'Work request submitted'});
      }
   });
 });
@@ -46,9 +46,9 @@ app.get('/staff/checkStatus',(req,res)=>{
             WHERE id=?`;
     connection.query(sql,[staff_feedback,rating,id],(err,result)=>{
       if(err){
-        res.send('Could not process feedback');
+        res.send({mesaage:'Could not process feedback'});
       }else{
-        res.send('Feedback submitted');
+        res.send({mesaage:'Feedback submitted'});
       } 
     });
   });
@@ -59,7 +59,7 @@ app.post('/staff/authenticateStaffNuner',(req,res)=>{
   const sql=`SELECT staff_id FROM staff`;
   connection.query(sql,(err,result)=>{
     if(result.length>0){
-      if(result[0].password == password){
+      if(result[0].staff_id ==staff_num ){
          res.send({
             message:'Aunthentication completed!'
           })

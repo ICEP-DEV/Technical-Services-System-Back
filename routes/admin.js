@@ -4,6 +4,13 @@ const dbConnection = require('../config/connection');
 
 module.exports = app => {
   const connection = dbConnection();
+  connection.connect(function(err) {
+    if (err) {
+      return console.error('error: ' + err.message);
+    }
+  
+    console.log('Connected to the MySQL server.');
+  });
  
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                                         ///VIEW ALL REQUESTS
@@ -63,8 +70,8 @@ app.get('/admin/availableTechnician',(req,res)=>{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
-app.post('/admin/assign:id',(res,req)=>{
-  const sql="UPDATE work_request SET id=?";
+app.post('/admin/assign:tech_id',(res,req)=>{
+  const sql="UPDATE work_request SET tech_id=?";
   connection.query(sql,(err,result)=>{
     if(err){
       throw err;
@@ -75,7 +82,7 @@ app.post('/admin/assign:id',(res,req)=>{
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                          VIEW TECHNICIAN PROGRESS                                                      */
  app.get('/admin/progresStatus',(req,res)=>{
-  const sql ="SELECT a.id,a.progress FROM work_request a, technician t WHERE a.tech_id = t.id;";
+  const sql ="SELECT a.id,a.progress FROM work_request a, technician t WHERE a.tech_id = t.tech_id;";
   connection.query(sql,(err,result)=>{
     if(err){
       throw err;
@@ -88,7 +95,7 @@ app.post('/admin/assign:id',(res,req)=>{
  app.get('/admin/viewFeedback',(req,res)=> {
   const sql=`SELECT s.name,s.surname,w.staff_feedback,w.tech_feedback,w.rating,t.name,t.surname
              FROM staff s,work_request w,technician t
-             WHERE s.staff_id=w.staff_id AND t.id=w.tech_id`;
+             WHERE s.staff_id=w.staff_id AND t.tech_id=w.tech_id`;
   connection.query(sql,(err,result)=>{
     if(err){
       throw err;
@@ -101,7 +108,7 @@ app.post('/admin/assign:id',(res,req)=>{
 app.get('/admin/viewInProgressTasks',(req,res)=>{
  const sql=`SELECT l.id,l.description,t.name,l.progress,s.staff_name 
             FROM technician t,work_request l,staff s 
-            WHERE l.tech_id=t.id AND l.staff_id=s.staff_id AND l.progress='In-Progress' `;
+            WHERE l.tech_id=t.tech_id AND l.staff_id=s.staff_id AND l.progress='in-progress' `;
  connection.query(sql,(err,result)=>{
   if(err){
     throw err;
@@ -111,10 +118,10 @@ app.get('/admin/viewInProgressTasks',(req,res)=>{
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                VIEW COMPLETED TASKS                                                                           */
-app.get('/admin/viewInCompletedTasks',(req,res)=>{
+app.get('/admin/viewCompletedTasks',(req,res)=>{
   const sql=`SELECT l.id,l.description,t.name,l.progress,s.staff_name 
             FROM technician t,work_request l,staff s 
-            WHERE l.tech_id=t.id AND l.staff_id=s.staff_id AND l.progress='Completed' `;
+            WHERE l.tech_id=t.tech_id AND l.staff_id=s.staff_id AND l.progress='complete' `;
   connection.query(sql,(err,result)=>{
    if(err){
      throw err;
@@ -143,8 +150,8 @@ app.post('/admin/addTechnician',(req,res)=>{
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                             VIEW ALL TECHNICIAN IN THE SYSTEM                                                             */
-app.get('/admin/viewAllTechnicans',(req,res)=>{
-  const sql= `SELECT t.id,t.name,t.surname,t.phone,t.email,d.division_name  
+app.get('/admin/viewAllTechnicians',(req,res)=>{
+  const sql= `SELECT t.tech_id,t.name,t.surname,t.phone,t.email,d.division_name  
               FROM technician t,division d
               WHERE t.division_id =d.id`;
   connection.query(sql,(err,result)=>{
@@ -185,7 +192,7 @@ app.post('/admin/login',(req,res)=>{
       if(result[0].password == password){
          res.send({
             message:'Successfully Logged In!'
-          })
+          });
       }
       else{
         res.send({
@@ -196,6 +203,21 @@ app.post('/admin/login',(req,res)=>{
     }
   });
 });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                             DELETE A REQUEST                                                                                                   */
+app.get('/admin/deleteRequest:id',(req,res)=>{
+    const sql=`DELETE * FROM work_request WHERE id=?`;
+    connection.query(sql,(err,result)=>{
+      if(err){
+        throw err;
+      }
+      else{
+        res.send({message:`${id} deleted`});
+      }
+    })
+});
 };
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
