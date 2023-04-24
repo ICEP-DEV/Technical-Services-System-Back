@@ -56,7 +56,7 @@ app.get('/staff/checkStatus',(req,res)=>{
   });
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       AUTHENTICATE STAFF NUMBER                                                                              */
-app.post('/staff/authenticateStaffNuner',(req,res)=>{
+app.post('/staff/authenticateStaffNumber',(req,res)=>{
   let staff_num=req.body.staff_num;///staff inputs their staff number
   const sql=`SELECT staff_id FROM staff`;
   connection.query(sql,(err,result)=>{

@@ -35,7 +35,7 @@ module.exports = app => {
                                                         ////THE ADIM SETS THE PRIORITY OF THE REQUEST
 
 app.post("/admin/setPriority/:id",(req,res)=>{
-  const sql="UPDATE work_request SET priority=? WHERE id=?";
+  const sql=`UPDATE work_request SET priority=? WHERE id='${req.params.id}'`;
   connection.query(sql,(err,result)=>{
     if(err){
       console.log(err.message);
@@ -47,7 +47,8 @@ app.post("/admin/setPriority/:id",(req,res)=>{
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                           ////VIEWING A SPECIFIC REQUEST
 app.get("/admin/viewRequest/:id",(req,res)=>{
-    connection.query('SELECT * FROM work_request WHERE id = ?',req.body.id,(err,result)=>{
+    const sql=`SELECT * FROM work_request WHERE id=${req.params.id}`;
+    connection.query(sql,(err,result)=>{
       if(err){
         console.log(err.message);
         throw err;
@@ -71,7 +72,7 @@ app.get('/admin/availableTechnician',(req,res)=>{
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
 app.post('/admin/assign/:tech_id',(res,req)=>{
-  const sql=`UPDATE work_request SET tech_id=?,status='active'`;
+  const sql=`UPDATE work_request SET tech_id='${req.params.tech_id}',status='active'`;
   connection.query(sql,(err,result)=>{
     if(err){
       throw err;
@@ -81,7 +82,7 @@ app.post('/admin/assign/:tech_id',(res,req)=>{
   })
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                          VIEW TECHNICIAN PROGRESS                                                      */
- app.get('/admin/progresStatus',(req,res)=>{
+ app.get('/admin/viewProgress',(req,res)=>{
   const sql =`SELECT a.id,a.progress FROM work_request a, technician t WHERE a.tech_id = t.tech_id`;
   connection.query(sql,(err,result)=>{
     if(err){
@@ -206,7 +207,7 @@ app.post('/admin/login',(req,res)=>{
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                             DELETE A REQUEST                                                                                                   */
 app.get('/admin/deleteRequest/:id',(req,res)=>{
-    const sql=`DELETE * FROM work_request WHERE id=?`;
+    const sql=`DELETE * FROM work_request WHERE id='${req.params.id}'`;
     connection.query(sql,(err,result)=>{
       if(err){
         throw err;
@@ -221,7 +222,7 @@ app.get('/admin/deleteRequest/:id',(req,res)=>{
 app.get('/admin/log-close/:id',(req,res)=>{
   const sql=`UPDATE work_request 
             SET status='close'
-            WHERE id=?`;
+            WHERE id='${req.params.id}'`;
   connection.query(sql,(err,result)=>{
     if(err){
       throw err;
