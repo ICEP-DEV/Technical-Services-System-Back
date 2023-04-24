@@ -6,7 +6,7 @@ module.exports = app => {
   const connection = dbConnection();
   connection.connect(function(err) {
     if (err) {
-      return console.error('error: ' + err.message);
+      return console.error('error: ' + err.message);/**message error whenever connection fails */
     }
   
     console.log('Connected to the MySQL server.');
@@ -58,7 +58,7 @@ app.get("/admin/viewRequest/:id",(req,res)=>{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       VIEW AVAILABLE TECHNICIANS*/
 app.get('/admin/availableTechnician',(req,res)=>{
-  const sql="SELECT name, surname FROM technician WHERE availability='available'";
+  const sql=`SELECT name, surname FROM technician WHERE availability='available'`;
   connection.query(sql,(err,result)=>{
     if(err){
       console.log(err.message);
@@ -70,8 +70,8 @@ app.get('/admin/availableTechnician',(req,res)=>{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
-app.post('/admin/assign:tech_id',(res,req)=>{
-  const sql="UPDATE work_request SET tech_id=?";
+app.post('/admin/assign/:tech_id',(res,req)=>{
+  const sql=`UPDATE work_request SET tech_id=?,status='active'`;
   connection.query(sql,(err,result)=>{
     if(err){
       throw err;
@@ -82,7 +82,7 @@ app.post('/admin/assign:tech_id',(res,req)=>{
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                          VIEW TECHNICIAN PROGRESS                                                      */
  app.get('/admin/progresStatus',(req,res)=>{
-  const sql ="SELECT a.id,a.progress FROM work_request a, technician t WHERE a.tech_id = t.tech_id;";
+  const sql =`SELECT a.id,a.progress FROM work_request a, technician t WHERE a.tech_id = t.tech_id`;
   connection.query(sql,(err,result)=>{
     if(err){
       throw err;
@@ -91,7 +91,7 @@ app.post('/admin/assign:tech_id',(res,req)=>{
   });
  }); 
    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
- /**                                          VIEW FEEDBACK                                                    */
+ /**                                          VIEW FEEDBACK fFROM BOTH STAFF AND TECHNICIAN                                                    */
  app.get('/admin/viewFeedback',(req,res)=> {
   const sql=`SELECT s.name,s.surname,w.staff_feedback,w.tech_feedback,w.rating,t.name,t.surname
              FROM staff s,work_request w,technician t
@@ -205,7 +205,7 @@ app.post('/admin/login',(req,res)=>{
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                             DELETE A REQUEST                                                                                                   */
-app.get('/admin/deleteRequest:id',(req,res)=>{
+app.get('/admin/deleteRequest/:id',(req,res)=>{
     const sql=`DELETE * FROM work_request WHERE id=?`;
     connection.query(sql,(err,result)=>{
       if(err){
@@ -216,8 +216,21 @@ app.get('/admin/deleteRequest:id',(req,res)=>{
       }
     })
 });
-};
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**                                           CLOSE LOG                                                 */
+app.get('/admin/log-close/:id',(req,res)=>{
+  const sql=`UPDATE work_request 
+            SET status='close'
+            WHERE id=?`;
+  connection.query(sql,(err,result)=>{
+    if(err){
+      throw err;
+    }else{
+      res.send({message:`log closed`})
+    }
+  })          
+})
+};
 
 
 

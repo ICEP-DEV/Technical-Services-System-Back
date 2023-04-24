@@ -92,6 +92,7 @@ CREATE TABLE work_request(
  staff_feedback TEXT,
  tech_feedback TEXT,
  rating INT,
+ status ENUM ('active','closed'),
  admin_id BIGINT,
  tech_id BIGINT,
  staff_id BIGINT,

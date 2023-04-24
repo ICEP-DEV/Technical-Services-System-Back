@@ -1,3 +1,4 @@
+const { body } = require('express-validator');
 const dbConnection = require('../config/connection');
 
 
@@ -13,8 +14,9 @@ app.post("/staff/createRequest", (req, res) => {
     req_date: new Date().toISOString().slice(0, 10), 
     category: req.body.category,
     venue:req.body.venue,
-    image:req.body.image};
-  let sql = `INSERT INTO work_request SET ?`;
+    image:req.body.image,
+    staff_id:req.body.staff_id};
+  const sql = `INSERT INTO work_request SET ?`;
   connection.query(sql,data, (err,res)=> {
      if(err){
      throw err;

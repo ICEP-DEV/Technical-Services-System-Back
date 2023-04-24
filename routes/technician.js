@@ -19,7 +19,7 @@ module.exports = app => {
     /**                                     TECHNICIAN UPDATE THEIR PROGRESS OF TASK                                                 */
   app.post('technician/updateTask:tech_id',(req,res)=>{
     let status=req.body.status;
-    const sql="UPDATE work_order SET status=? WHERE tech_id=? ";
+    const sql="UPDATE work_order SET progress=? WHERE tech_id=? ";
     connection.query(sql,status,(err,result)=>{
       if(err){
           throw err;
