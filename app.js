@@ -1,5 +1,4 @@
 const app=require('./routes/server');
-const cors=require('cors');
 require('./routes/admin')(app);
 require('./routes/staff')(app);
 require('./routes/technician')(app);

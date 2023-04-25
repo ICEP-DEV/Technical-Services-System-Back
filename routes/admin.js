@@ -9,12 +9,12 @@ module.exports = app => {
       return console.error('error: ' + err.message);/**message error whenever connection fails */
     }
   
-    console.log('Connected to the MySQL server.');
+    console.log('Connected to MySQL server.');
   });
  
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                                         ///VIEW ALL REQUESTS
-  app.get("/admin/ViewAllrequest", (req, res) => {
+  app.get("/admin/viewAllrequest", (req, res) => {
     sql=`SELECT w.id, w.description,w.category,w.req_date, s.staff_name,s.campus,w.image 
          FROM work_request w,staff s 
          WHERE s.staff_id=w.staff_id`;
@@ -41,17 +41,18 @@ app.post("/admin/setPriority/:id",(req,res)=>{
       console.log(err.message);
       throw err;
   }
-  res.send(201, req.body); 
+  res.send({message:'Priority of task set'}); 
   })
 })
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                           ////VIEWING A SPECIFIC REQUEST
 app.get("/admin/viewRequest/:id",(req,res)=>{
-    const sql=`SELECT * FROM work_request WHERE id=${req.params.id}`;
+    const sql=`SELECT id,req_date,category,venue,progress,status 
+                FROM work_request   
+                WHERE id=${req.params.id}`;
     connection.query(sql,(err,result)=>{
       if(err){
         console.log(err.message);
-        throw err;
     }
     res.send(result);
     })
@@ -63,7 +64,6 @@ app.get('/admin/availableTechnician',(req,res)=>{
   connection.query(sql,(err,result)=>{
     if(err){
       console.log(err.message);
-      throw err;
   }
   res.send(result);
   })
