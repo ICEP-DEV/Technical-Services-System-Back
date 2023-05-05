@@ -26,10 +26,26 @@ module.exports = app => {
       if(result.length>0)
       {
           res.send({
-              result:result
+              result
           });
       }
     });
+  });
+  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                              /*DISPLAYS THOSE THAT THAVE HAVE LOGGED A REQUEST*/
+  app.get("/admin/viewRequester",(req,res)=>{
+    sql=`SELECT w.id,s.staff_name,s.staff_surname,s.email
+        FROM work_request w,staff s
+        WHERE s.staff_id=w.staff_id`;
+    connection.query(sql,(err,result)=>{
+      if(err){
+        throw err;
+      }else{
+        res.send({
+          result
+      });
+      }
+    })
   });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                         ////THE ADIM SETS THE PRIORITY OF THE REQUEST
@@ -60,7 +76,7 @@ app.get("/admin/viewRequest/:id",(req,res)=>{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       VIEW AVAILABLE TECHNICIANS*/
 app.get('/admin/availableTechnician',(req,res)=>{
-  const sql=`SELECT name, surname FROM technician WHERE availability='available'`;
+  const sql=`SELECT tech_id,name, surname FROM technician WHERE availability='available'`;
   connection.query(sql,(err,result)=>{
     if(err){
       console.log(err.message);
@@ -187,33 +203,42 @@ app.get('/admin/totalRequests',(req,res)=>{
 app.post('/admin/login',(req,res)=>{
   let admin_email=req.body.admin_email;
   let password=req.body.password;
-  const sql=`SELECT * FROM administrator WHERE email="${admin_email}"`;
+  const sql=`SELECT * 
+            FROM administrator WHERE email="${admin_email}"`;
   connection.query(sql,(err,result)=>{
     if(result.length>0){
       if(result[0].password == password){
          res.send({
             message:'Successfully Logged In!'
           });
+          console.log(result)
       }
       else{
         res.send({
           message:"Incorrect Details!"
         });
+        
       }
-
+    }else
+    {
+      res.send({
+        message:"Incorrect Details!"
+      });
     }
+    
   });
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                             DELETE A REQUEST                                                                                                   */
 app.get('/admin/deleteRequest/:id',(req,res)=>{
-    const sql=`DELETE * FROM work_request WHERE id='${req.params.id}'`;
+    const sql=`DELETE FROM work_request
+               WHERE id='${req.params.id}'`;
     connection.query(sql,(err,result)=>{
       if(err){
         throw err;
       }
       else{
-        res.send({message:`${id} deleted`});
+        res.send({message:`"${req.params.id}" deleted`});
       }
     })
 });
