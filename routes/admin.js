@@ -51,8 +51,9 @@ module.exports = app => {
                                                         ////THE ADIM SETS THE PRIORITY OF THE REQUEST
 
 app.post("/admin/setPriority/:id",(req,res)=>{
+  let priority=req.body.priority;
   const sql=`UPDATE work_request SET priority=? WHERE id='${req.params.id}'`;
-  connection.query(sql,(err,result)=>{
+  connection.query(sql,priority,(err,result)=>{
     if(err){
       console.log(err.message);
       throw err;
@@ -75,8 +76,13 @@ app.get("/admin/viewRequest/:id",(req,res)=>{
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       VIEW AVAILABLE TECHNICIANS*/
-app.get('/admin/availableTechnician',(req,res)=>{
-  const sql=`SELECT tech_id,name, surname FROM technician WHERE availability='available'`;
+app.get('/admin/availableTechnician/:id',(req,res)=>{
+  const sql=`SELECT t.tech_id,t.name,t.surname 
+             FROM technician t,division d,work_request w 
+             WHERE availability='available'
+             AND d.id=t.division_id
+             AND w.category = d.division_name
+             AND w.id= ${req.params.id}`;
   connection.query(sql,(err,result)=>{
     if(err){
       console.log(err.message);
@@ -87,19 +93,28 @@ app.get('/admin/availableTechnician',(req,res)=>{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
-app.post('/admin/assign/:tech_id',(res,req)=>{
-  const sql=`UPDATE work_request SET tech_id='${req.params.tech_id}',status='active'`;
-  connection.query(sql,(err,result)=>{
+app.post('/admin/assign',(res,req)=>{
+  let data={
+    tech_id:req.body.tech_id,
+    id:req.body.id
+  }
+  const sql=`UPDATE work_request 
+             SET tech_id =?
+             WHERE id =?`;
+  connection.query(sql,data,(err,result)=>{
     if(err){
       throw err;
     }
-    res.send(result);
+    res.send({message:"Technician Assigned"});
   })
   })
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                          VIEW TECHNICIAN PROGRESS                                                      */
- app.get('/admin/viewProgress',(req,res)=>{
-  const sql =`SELECT a.id,a.progress FROM work_request a, technician t WHERE a.tech_id = t.tech_id`;
+ app.get('/admin/viewProgress/:id',(req,res)=>{
+  const sql =`SELECT a.id,a.progress 
+              FROM work_request a, technician t 
+              WHERE a.tech_id = t.tech_id
+              AND a.id=${req.params.id}`;
   connection.query(sql,(err,result)=>{
     if(err){
       throw err;
@@ -110,7 +125,7 @@ app.post('/admin/assign/:tech_id',(res,req)=>{
    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  /**                                          VIEW FEEDBACK fFROM BOTH STAFF AND TECHNICIAN                                                    */
  app.get('/admin/viewFeedback',(req,res)=> {
-  const sql=`SELECT s.name,s.surname,w.staff_feedback,w.tech_feedback,w.rating,t.name,t.surname
+  const sql=`SELECT s.staff_name,s.staff_surname,w.staff_feedback,w.tech_feedback,w.rating,t.name,t.surname
              FROM staff s,work_request w,technician t
              WHERE s.staff_id=w.staff_id AND t.tech_id=w.tech_id`;
   connection.query(sql,(err,result)=>{
@@ -150,21 +165,23 @@ app.get('/admin/viewCompletedTasks',(req,res)=>{
 /**                                                 ADD  TECHNICIAN                                                                                */
 app.post('/admin/addTechnician',(req,res)=>{
   let data={
-    id:req.body.id,
+    tech_id:req.body.tech_id,
     name:req.body.name,
     surname:req.body.surname,
     phone:req.body.phone,
     email:req.body.email,
     gender:req.body.gender,
+    division_id:req.body.division_id,
+    campus:req.body.campus
   };
   const sql = `INSERT INTO technician SET ?`;
-  connection.query(sql,data,(err,result=>{
+  connection.query(sql,data,(err,result)=>{
     if(err){
       throw err;
     }
-    res.send({message:"Technician Added"});
-  }));
-});
+    res.send({message:'Technician Added'});
+     });
+  });  
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                             VIEW ALL TECHNICIAN IN THE SYSTEM                                                             */
 app.get('/admin/viewAllTechnicians',(req,res)=>{
@@ -202,27 +219,33 @@ app.get('/admin/totalRequests',(req,res)=>{
  /*                                              LOGIN-AUTHENTICATION                                                                            */
 app.post('/admin/login',(req,res)=>{
   let admin_email=req.body.admin_email;
+  let admin_id=req.body.admin_id;
   let password=req.body.password;
   const sql=`SELECT * 
-            FROM administrator WHERE email="${admin_email}"`;
+            FROM administrator 
+            WHERE email="${admin_email}" OR admin_id="${admin_id}"`;
   connection.query(sql,(err,result)=>{
     if(result.length>0){
       if(result[0].password == password){
          res.send({
-            message:'Successfully Logged In!'
+            message:'Successfully Logged In!',
+            result,
+            success:true
           });
           console.log(result)
       }
       else{
         res.send({
-          message:"Incorrect Details!"
+          message:"Incorrect Details!",
+          success:false
         });
         
       }
     }else
     {
       res.send({
-        message:"Incorrect Details!"
+        message:"Incorrect Details!",
+        success:false
       });
     }
     
@@ -244,9 +267,9 @@ app.get('/admin/deleteRequest/:id',(req,res)=>{
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                           CLOSE LOG                                                 */
-app.get('/admin/log-close/:id',(req,res)=>{
+app.post('/admin/log-close/:id',(req,res)=>{
   const sql=`UPDATE work_request 
-            SET status='close'
+            SET status='closed'
             WHERE id='${req.params.id}'`;
   connection.query(sql,(err,result)=>{
     if(err){

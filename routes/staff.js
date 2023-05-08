@@ -17,11 +17,13 @@ app.post("/staff/createRequest", (req, res) => {
     image:req.body.image,
     staff_id:req.body.staff_id};
   const sql = `INSERT INTO work_request SET ?`;
-  connection.query(sql,data, (err,res)=> {
+  connection.query(sql,data, (err,result)=> {
      if(err){
      throw err;
       }else{
-        res.send({message:'Work request submitted'});
+        res.send({
+          message:'Work request submitted'
+        });
      }
   });
 });
@@ -29,8 +31,8 @@ app.post("/staff/createRequest", (req, res) => {
                                                             ///VIEW PROGRESS OF RERQUEST///
 app.get('/staff/checkStatus',(req,res)=>{
   let ref_number=req.body.ref_number;///staff inputs the the reference number of request
-  const sql=`SELECT id,progess FROM work_request WHERE id= "${ref_number}"`;
-  connection.query(sql,(err,res)=>{
+  const sql=`SELECT id,progress FROM work_request WHERE id= "${ref_number}"`;
+  connection.query(sql,(err,result)=>{
     if(err){
       throw err;
        }else{
@@ -38,14 +40,16 @@ app.get('/staff/checkStatus',(req,res)=>{
       }
   });
 });
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                             ///STAFF SENDING FEEDBACK///
-  app.post("/staff/sendFeedback",(req,res)=>{
-   let{staff_feedback,rating,id}=req.body;
+  app.post("/staff/sendFeedback/:id",(req,res)=>{
+   let{staff_feedback,rating}=req.body;
+   let id=req.params.id;
     const sql=`UPDATE work_request
             SET staff_feedback= ?
                 ,rating =?
-            WHERE id=?`;
+               WHERE id=?`;
     connection.query(sql,[staff_feedback,rating,id],(err,result)=>{
       if(err){
         res.send({mesaage:'Could not process feedback'});
