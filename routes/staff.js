@@ -40,7 +40,21 @@ app.get('/staff/checkStatus',(req,res)=>{
       }
   });
 });
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**                                                      VIEW MY REQUESTS                                                                  */
+app.get('/staff/loggedRequests/:staff_id',(req,res)=>{
+    const sql=`SELECT id,description,category,req_date,venue,progress,status
+            FROM work_request
+            WHERE staff_id ="${req.params.staff_id}"
+            ORDER BY req_date`
+    connection.query(sql,(err,result)=>{
+      if(err){
+        throw err;
+         }else{
+           res.send(result);
+        }
+    })     
+})
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                             ///STAFF SENDING FEEDBACK///
   app.post("/staff/sendFeedback/:id",(req,res)=>{

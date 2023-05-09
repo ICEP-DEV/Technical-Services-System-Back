@@ -19,10 +19,10 @@ module.exports = app => {
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**                                     TECHNICIAN UPDATE THEIR PROGRESS OF TASK                                                 */
-  app.post('/technician/updateTask/:tech_id',(req,res)=>{
+  app.post('/technician/updateTask/:id',(req,res)=>{
     let progress=req.body.progress;
     const sql=`UPDATE work_request SET progress=? 
-              WHERE tech_id='${req.params.tech_id}' `;
+              WHERE id='${req.params.id}' `;
     connection.query(sql,progress,(err,result)=>{
       if(err){
           throw err;
@@ -32,30 +32,37 @@ module.exports = app => {
   })
      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**                                     TECHNICIAN LOG-IN AUTHENTICATION                                                */
-   app.post('/technician/adminLogin',(req,res)=>{
-      let technician_email=req.body.technician_email;
-      let tech_id=req.body.email;
-      let password=req.body.password;
-      const sql=`SELECT * 
-                FROM technician 
-                WHERE email="${technician_email}" OR tech_id="${tech_id}`;
-      connection.query(sql,(err,result)=>{
-        if(result.length>0){
-          if(result[0].password == password){
-             res.send({
-                message:'Successfully Logged In!'
-              });
-          }
-          else{
-            res.send({
-              message:"Incorrect Details!"
+   app.post('/technician/login',(req,res)=>{
+    let tech_email=req.body.technician_email;
+    let tech_id=req.body.tech_id;
+    let password=req.body.password;
+    const sql=`SELECT * 
+              FROM technician 
+              WHERE email="${tech_email}" OR admin_id="${tech_id}"`;
+    connection.query(sql,(err,result)=>{
+      if(result.length>0){
+        if(result[0].password == password){
+           res.send({
+              message:'Successfully Logged In!',
+              result,
+              success:true
             });
-          }
-    
+            console.log(result)
         }
         else{
-          throw err;
+          res.send({
+            message:"Incorrect Details!",
+            success:false
+          });
+          
         }
+      }else
+      {
+        res.send({
+          message:"Incorrect Details!",
+          success:false
+        });
+      }
       });
     });
     ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

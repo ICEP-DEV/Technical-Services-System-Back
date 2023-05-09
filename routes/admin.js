@@ -93,24 +93,25 @@ app.get('/admin/availableTechnician/:id',(req,res)=>{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
-app.post('/admin/assign',(res,req)=>{
-  let data={
-    tech_id:req.body.tech_id,
-    id:req.body.id
-  }
+app.post('/admin/assignTechnician/:id',(req,res)=>{
+  let tech_id=req.body.tech_id;
   const sql=`UPDATE work_request 
-             SET tech_id =?
-             WHERE id =?`;
-  connection.query(sql,data,(err,result)=>{
+            SET status="active",
+            progress="In-progress",
+            tech_id=? 
+            WHERE id=${req.params.id}`
+  connection.query(sql,tech_id,(err,result)=>{
     if(err){
+      console.log(err.message);
       throw err;
-    }
-    res.send({message:"Technician Assigned"});
-  })
-  })
+  }
+    res.send({message:'Technician assigned to task'}); 
+  });
+});
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                          VIEW TECHNICIAN PROGRESS                                                      */
  app.get('/admin/viewProgress/:id',(req,res)=>{
+  
   const sql =`SELECT a.id,a.progress 
               FROM work_request a, technician t 
               WHERE a.tech_id = t.tech_id
