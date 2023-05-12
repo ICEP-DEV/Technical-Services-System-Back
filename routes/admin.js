@@ -69,7 +69,8 @@ app.get("/admin/viewRequest/:id",(req,res)=>{
                 WHERE id=${req.params.id}`;
     connection.query(sql,(err,result)=>{
       if(err){
-        console.log(err.message);
+        res.send({message:"could not fetch data",
+        success:true});
     }
     res.send(result);
     })
@@ -85,7 +86,8 @@ app.get('/admin/availableTechnician/:id',(req,res)=>{
              AND w.id= ${req.params.id}`;
   connection.query(sql,(err,result)=>{
     if(err){
-      console.log(err.message);
+      res.send({message:"could not fetch data",
+        success:false});
   }
   res.send(result);
   })
@@ -95,15 +97,17 @@ app.get('/admin/availableTechnician/:id',(req,res)=>{
                                                      /*ASSIGN A TECHNICIAN*/
 app.post('/admin/assignTechnician/:id',(req,res)=>{
   let tech_id=req.body.tech_id;
+  let assigned_date=new Date().toISOString().slice(0, 10)
   const sql=`UPDATE work_request 
             SET status="active",
             progress="In-progress",
-            tech_id=? 
+            tech_id=?,
+            assigned_date=?
             WHERE id=${req.params.id}`
-  connection.query(sql,tech_id,(err,result)=>{
+  connection.query(sql,tech_id,assigned_date,(err,result)=>{
     if(err){
-      console.log(err.message);
-      throw err;
+      res.send({message:"An error occured",
+        success:false});
   }
     res.send({message:'Technician assigned to task'}); 
   });
