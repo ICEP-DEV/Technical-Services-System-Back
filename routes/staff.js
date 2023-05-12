@@ -76,22 +76,22 @@ app.get('/staff/loggedRequests/:staff_id',(req,res)=>{
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       AUTHENTICATE STAFF NUMBER                                                                              */
 app.post('/staff/authenticateStaffNumber',(req,res)=>{
-  let staff_num=req.body.staff_num;///staff inputs their staff number
-  const sql=`SELECT * FROM staff`;
+  let staff_id=req.body.staff_id;///staff inputs their staff number
+  const sql=`SELECT * FROM staff
+             WHERE staff_id=${staff_id}`;
   connection.query(sql,(err,result)=>{
-    if(result.length>0){
-      if(result[0].staff_id ==staff_num ){
-         res.send({
-            message:'Aunthentication completed!'
-          })
-      }
-      else{
-        res.send({
-          message:"Entered staff number not found!"
-        });
-      }
-
-    }
+      if(result.length>0){
+           res.send({
+            message:`Aunthentication completed for ${result[0].staff_name} ${result[0].staff_surname}!`,
+            success:true
+               })
+           }
+          else{
+          res.send({
+            message:"Entered staff number not found!",
+            success:false
+          });
+         }
   });
 });
 };

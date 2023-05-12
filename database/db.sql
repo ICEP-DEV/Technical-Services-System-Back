@@ -1,3 +1,48 @@
+CREATE TABLE department(
+  department_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+  faculty VARCHAR(75),
+  department VARCHAR(45),
+  venue VARCHAR(45),
+  telephone_num CHAR(10),
+  email VARCHAR(45)
+);
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Information Communication Technology','Department of Computer Science','18-G01');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Information Communication Technology','Department of Informatics','18-G01');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Economics and Finances','Department of Accounting','2-g02');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Economics and Finances','Department of Auditing','2-14');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Economics and Finances','Department of Economics','4-20');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Economics and Finances','Department of Finance and Investment','8-g05'),
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Economics and Finances','Department of Public Sector Finance','2-g02');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Science','Department of Biomedical Sciences','10-12');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Science','Department of Chemistry','10-110');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Science','Department of Physics','18-12');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Science','Department of Biotechnology and food technology','10-12');
+
+
+
+
 CREATE TABLE staff(
 staff_id BIGINT NOT NULL PRIMARY KEY,
 staff_name VARCHAR(45),
@@ -5,23 +50,25 @@ staff_surname VARCHAR(45),
 email VARCHAR(45),
 phone CHAR(10),
 gender ENUM('male', 'female') NOT NULL,
-campus VARCHAR(45)
+campus VARCHAR(45),
+department_id INT,
+FOREIGN KEY department_id REFERENCES department(department_id) 
 );
 
-INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus)
-VALUES (222424345,'James','Motaung','james34@tut4life.ac.za','0124578965','male','Soshanguve South');
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
+VALUES (222424345,'James','Motaung','james34@tut4life.ac.za','0124578965','male','Soshanguve South',1);
+
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
+VALUES (222466645,'Jane','Moloi','janeMol01@tut4life.ac.za','0124578365','female','Soshanguve South',2);
 
 INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus)
-VALUES (222466645,'Jane','Moloi','janeMol01@tut4life.ac.za','0124578365','female','Soshanguve South');
+VALUES (202123345,'Johanna','McAthurthy','mcathurthy4@tut4life.ac.za','0127778360','female','Soshanguve South',1);
 
-INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus)
-VALUES (202123345,'Johanna','McAthurthy','mcathurthy4@tut4life.ac.za','0127778360','female','Soshanguve South');
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
+VALUES (212879345,'Thabo','Mokoena','mokoanaThab0@tut4life.ac.za','0129354560','male','Arcadia',9);
 
-INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus)
-VALUES (212879345,'Thabo','Mokoena','mokoanaThab0@tut4life.ac.za','0129354560','male','Arcadia');
-
-INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus)
-VALUES (202458345,'Dikeledi','Moepi','moepi@tut4life.ac.za','0127878360','female','Ga-runkuwa');
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
+VALUES (202458345,'Dikeledi','Moepi','moepi@tut4life.ac.za','0127878360','female','Ga-rankuwa',5);
 
 
 
@@ -94,6 +141,8 @@ CREATE TABLE work_request(
  tech_feedback TEXT,
  rating INT,
  status ENUM ('active','closed'),
+ completed_date date,
+ assigned_date date,
  admin_id BIGINT,
  tech_id BIGINT,
  staff_id BIGINT,
