@@ -57,18 +57,19 @@ app.get('/staff/loggedRequests/:staff_id',(req,res)=>{
 })
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                             ///STAFF SENDING FEEDBACK///
-  app.post("/staff/sendFeedback/:id",(req,res)=>{
+  app.post("/staff/sendFeedback/",(req,res)=>{
    let{staff_feedback,rating}=req.body;
-   let id=req.params.id;
+   let id=req.body.id;
     const sql=`UPDATE work_request
             SET staff_feedback= ?
                 ,rating =?
-               WHERE id=?`;
+               WHERE id=?`;///reference
     connection.query(sql,[staff_feedback,rating,id],(err,result)=>{
       if(err){
         res.send({mesaage:'Could not process feedback'});
       }else{
-        res.send({mesaage:'Feedback submitted'});
+        res.send({mesaage:'Feedback submitted',result});
+        console.log(({mesaage:'Feedback submitted',result}))
       } 
     });
   });
@@ -76,7 +77,7 @@ app.get('/staff/loggedRequests/:staff_id',(req,res)=>{
 /*                                                       AUTHENTICATE STAFF NUMBER                                                                              */
 app.post('/staff/authenticateStaffNumber',(req,res)=>{
   let staff_num=req.body.staff_num;///staff inputs their staff number
-  const sql=`SELECT staff_id FROM staff`;
+  const sql=`SELECT * FROM staff`;
   connection.query(sql,(err,result)=>{
     if(result.length>0){
       if(result[0].staff_id ==staff_num ){
