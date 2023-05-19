@@ -18,15 +18,21 @@ app.post("/staff/createRequest", (req, res) => {
     category: req.body.category,
     venue:req.body.venue,
     image:req.body.image,
+    status:'active',
     staff_id:req.body.staff_id};
   const sql = `INSERT INTO work_request SET ?`;
   connection.query(sql,data, (err,result)=> {
      if(err){
-     throw err;
+     res.send({
+      message:'Something went wrong...',
+      success:"false"
+     })
       }
+      else
       {
         res.send({
-          message:'Work request submitted'
+          message:'Work request submitted',
+          success:true
         });
      }
   });
@@ -104,7 +110,7 @@ if(error){
             success:true
             
                })
-               console.log(`staff :${result[0].staff_surname} logged in`)
+               console.log(`staff :${result[0].staff_name} ${result[0].staff_surname} logged in`)
       }
       else{
           res.send({

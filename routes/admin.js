@@ -1,3 +1,4 @@
+const { result } = require('@hapi/joi/lib/base');
 const { body } = require('express-validator');
 const dbConnection = require('../config/connection');
 
@@ -18,7 +19,8 @@ module.exports = app => {
   app.get("/admin/viewAllrequest", (req, res) => {
     sql=`SELECT w.id, w.description,w.category,w.req_date, s.staff_name,s.campus,w.image,w.progress 
          FROM work_request w,staff s 
-         WHERE s.staff_id=w.staff_id`;
+         WHERE s.staff_id=w.staff_id
+         AND w.status='active'`;
     connection.query(sql, (err, result) => {
       if(err)
       {
@@ -286,6 +288,54 @@ app.post('/admin/log-close/:id',(req,res)=>{
     }
   })          
 })
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                               *SEARCH BY CAMPUS*/
+app.get('/admin/getCampusRequests',(req,res)=>{
+  let campus=req.body.campus;
+  const sql=`SELECT * 
+            FROM work_request w, staff s
+            WHERE s.staff_id=w.staff_id
+            AND campus=${campus}`
+  connection.query(sql,(err,result)=>{
+    if(err){
+      res.send({message:"An error occured!"})
+    }else
+    {
+      res.send(result);
+    }
+  });          
+});
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                  /*VIEW ALL CLOSED LOGS */
+app.get('/admin/getClosedLogs',(req,res)=>{
+  const sql=`SELECT * 
+             FROM work_request
+             WHERE status='Closed'`;
+  connection.query(sql,(err,result)=>{
+    if(err){
+      res.send({message:"An error occured!"})
+    }else
+    {
+      res.send(result);
+    }
+  })           
+});
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                               /**GET TOTAL NUMBER OF CLOSED REQUESTS*/
+app.get('/admin/getTotalClossedLogs',(req,res)=>{
+  const sql=`SELECT COUNT(id)
+            FROM work_request AS Total_Closed
+            WHERE status='closed'`;
+  connection.query(sql,(err,result)=>{
+    if(err){
+      res.send({message:"An error occured!"})
+    }else
+    {
+      res.send(result);
+    }
+  })          
+});
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 };
 
 
