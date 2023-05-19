@@ -23,7 +23,7 @@ INSERT INTO department(faculty,department,venue)
 VALUES ('Economics and Finances','Department of Economics','4-20');
 
 INSERT INTO department(faculty,department,venue)
-VALUES ('Economics and Finances','Department of Finance and Investment','8-g05'),
+VALUES ('Economics and Finances','Department of Finance and Investment','8-g05');
 
 INSERT INTO department(faculty,department,venue)
 VALUES ('Economics and Finances','Department of Public Sector Finance','2-g02');
@@ -52,7 +52,7 @@ phone CHAR(10),
 gender ENUM('male', 'female') NOT NULL,
 campus VARCHAR(45),
 department_id INT,
-FOREIGN KEY department_id REFERENCES department(department_id) 
+FOREIGN KEY (department_id) REFERENCES department(department_id)
 );
 
 INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
@@ -61,7 +61,7 @@ VALUES (222424345,'James','Motaung','james34@tut4life.ac.za','0124578965','male'
 INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
 VALUES (222466645,'Jane','Moloi','janeMol01@tut4life.ac.za','0124578365','female','Soshanguve South',2);
 
-INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus)
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
 VALUES (202123345,'Johanna','McAthurthy','mcathurthy4@tut4life.ac.za','0127778360','female','Soshanguve South',1);
 
 INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)

@@ -4,6 +4,7 @@ const dbConnection = require('../config/connection');
 
 module.exports = app => {
   const connection = dbConnection();
+ // app.use(expressValidator());
   connection.connect(function(err) {
     if (err) {
       return console.error('error: ' + err.message);/**message error whenever connection fails */
@@ -15,7 +16,7 @@ module.exports = app => {
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                                         ///VIEW ALL REQUESTS
   app.get("/admin/viewAllrequest", (req, res) => {
-    sql=`SELECT w.id, w.description,w.category,w.req_date, s.staff_name,s.campus,w.image 
+    sql=`SELECT w.id, w.description,w.category,w.req_date, s.staff_name,s.campus,w.image,w.progress 
          FROM work_request w,staff s 
          WHERE s.staff_id=w.staff_id`;
     connection.query(sql, (err, result) => {
@@ -34,9 +35,10 @@ module.exports = app => {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                               /*DISPLAYS THOSE THAT THAVE HAVE LOGGED A REQUEST*/
   app.get("/admin/viewRequester",(req,res)=>{
-    sql=`SELECT w.id,s.staff_name,s.staff_surname,s.email
-        FROM work_request w,staff s
-        WHERE s.staff_id=w.staff_id`;
+    sql=`SELECT w.id,s.staff_name,s.staff_surname,s.email,d.faculty,d.department,s.campus
+        FROM work_request w,staff s,department d
+        WHERE s.staff_id=w.staff_id
+        AND s.department_id=d.department_id`;
     connection.query(sql,(err,result)=>{
       if(err){
         throw err;
@@ -234,7 +236,7 @@ app.post('/admin/login',(req,res)=>{
       if(result[0].password == password){
          res.send({
             message:'Successfully Logged In!',
-            result,
+            admin_id,
             success:true
           });
           console.log(result)

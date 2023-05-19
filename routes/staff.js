@@ -1,9 +1,12 @@
-const { body } = require('express-validator');
+const express = require('express');
+//const { body } = require('express-validator');
 const dbConnection = require('../config/connection');
+const Joi=require('@hapi/joi');
 
 
 module.exports = app => {
   const connection = dbConnection();
+  //app.use(expressValidator());
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                           ////CREATE A REQUEST
   
@@ -20,7 +23,8 @@ app.post("/staff/createRequest", (req, res) => {
   connection.query(sql,data, (err,result)=> {
      if(err){
      throw err;
-      }else{
+      }
+      {
         res.send({
           message:'Work request submitted'
         });
@@ -42,7 +46,7 @@ app.get('/staff/checkStatus',(req,res)=>{
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                                      VIEW MY REQUESTS                                                                  */
-app.get('/staff/loggedRequests/:staff_id',(req,res)=>{
+app.get('/staff/loggedRequests/:staff_id/',(req,res)=>{
     const sql=`SELECT id,description,category,req_date,venue,progress,status
             FROM work_request
             WHERE staff_id ="${req.params.staff_id}"
@@ -67,7 +71,7 @@ app.get('/staff/loggedRequests/:staff_id',(req,res)=>{
     connection.query(sql,[staff_feedback,rating,id],(err,result)=>{
       if(err){
         res.send({mesaage:'Could not process feedback'});
-      }else{
+      }if(result.length>0){
         res.send({mesaage:'Feedback submitted',result});
         console.log(({mesaage:'Feedback submitted',result}))
       } 
@@ -75,23 +79,39 @@ app.get('/staff/loggedRequests/:staff_id',(req,res)=>{
   });
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       AUTHENTICATE STAFF NUMBER                                                                              */
+/*
+const schema= Joi.object({
+  staff_id:Joi.number().integer().min(100000000).max(999999999).required()
+})*/
+
 app.post('/staff/authenticateStaffNumber',(req,res)=>{
-  let staff_id=req.body.staff_id;///staff inputs their staff number
+let staff_id=req.body.staff_id;///staff inputs their staff number
+/*const{error,value}=schema.validate(req.body);
+if(error){
+  //console.log(error);
+  res.send({
+    message:"invalid request"
+  })
+}*/
+
   const sql=`SELECT * FROM staff
              WHERE staff_id=${staff_id}`;
   connection.query(sql,(err,result)=>{
       if(result.length>0){
            res.send({
             message:`Aunthentication completed for ${result[0].staff_name} ${result[0].staff_surname}!`,
+            staff_id,
             success:true
+            
                })
-           }
-          else{
+               console.log(`staff :${result[0].staff_surname} logged in`)
+      }
+      else{
           res.send({
             message:"Entered staff number not found!",
             success:false
           });
-         }
+      }
   });
 });
 };

@@ -6,7 +6,7 @@ module.exports = app => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                     TECHNICIAN VIEWS TASKS ASSIGNED THEM                                                    */  
   app.get('/technician/tasks/:tech_id',(req,res)=>{
-    const sql=`SELECT w.description, w.priority, w.venue, w.category 
+    const sql=`SELECT w.category,w.description, w.priority, w.venue,w.progress 
               FROM work_request w,technician t 
               WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}';`
     connection.query(sql,(err,result)=>{
@@ -27,7 +27,9 @@ module.exports = app => {
       if(err){
           throw err;
       }
-      res.send({message:"Progress updated!"});
+      res.send({message:"Progress updated!",
+      success:"true"
+    });
     })
   })
      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,7 +92,9 @@ module.exports = app => {
       if(err){
        res.send({message:"An error occured!"}) ;
      }
-       res.send({message:"Feedback submitted"});
+       res.send({message:"Feedback submitted",
+       success:"true"
+      });
     })        
   })
 }
