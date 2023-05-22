@@ -31,7 +31,7 @@ app.post("/staff/createRequest", (req, res) => {
       else
       {
         res.send({
-          message:'Work request submitted',
+          message:`Work request submitted, your reference number :${ref_number}`,
           success:true
         });
      }
