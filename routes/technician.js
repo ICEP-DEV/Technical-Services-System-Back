@@ -11,9 +11,9 @@ module.exports = app => {
               WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}';`
     connection.query(sql,(err,result)=>{
       if(err){
-        throw err;
+        res.send({message:"An error occured",success:false});
       }
-      res.send(result);
+      res.send({result,success:true});
     })
    })
 
@@ -25,10 +25,9 @@ module.exports = app => {
               WHERE id='${req.params.id}' `;
     connection.query(sql,progress,(err,result)=>{
       if(err){
-          throw err;
+          res.send({message:"An error occured",succes:false});
       }
-      res.send({message:"Progress updated!",
-      success:"true"
+      res.send({message:"Progress updated!",success:true
     });
     })
   })
@@ -75,9 +74,9 @@ module.exports = app => {
                  WHERE s.staff_id =w.staff_id AND tech_id= ${req.body.tech_id}`;
       connection.query(sql,(err,result)=>{
         if(err){
-          throw err;
+          res.send({message:"An error occurred",succes:false});
       }
-      res.send(result);
+      res.send({result,success:true});
       });
     });
      ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -90,10 +89,10 @@ module.exports = app => {
             WHERE id=${req.params.id}`;
     connection.query(sql,tech_feedback,(err,result)=>{
       if(err){
-       res.send({message:"An error occured!"}) ;
+       res.send({message:"An error occured!",success:false}) ;
      }
        res.send({message:"Feedback submitted",
-       success:"true"
+       success:true
       });
     })        
   })

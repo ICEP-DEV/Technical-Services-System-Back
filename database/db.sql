@@ -152,13 +152,13 @@ CREATE TABLE work_request(
 );
 
 INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,status,admin_id,tech_id,staff_id)
-VALUES(1678884550556,'Leaking taps','06-03-2023','Plumbing','High','10-g28','','in-progress','active',202233345,25897486,222424345);
+VALUES(1678884550556,'Leaking taps','2023-03-20','Plumbing','High','10-g28','','in-progress','active',202233345,25897486,222424345);
 
 INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,admin_id,tech_id,staff_id)
-VALUES(1678784590556,'Blue screen','06-03-2023','Hardware','High','10-112','','complete','the issue is sorted','done with task',4,'closed',202233345,25999486,212879345);
+VALUES(1678784590556,'Blue screen','2023-03-06','Hardware','High','10-112','','complete','the issue is sorted','done with task',4,'closed',202233345,25999486,212879345);
 
 INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,admin_id,tech_id,staff_id)
-VALUES(1678684550957,'PC not switching on','06-03-2023','Hardware','High','10-102','','complete','sorted','hardware components changed',3,'closed',202233345,25999486,222466645);
+VALUES(1678684550957,'PC not switching on','2023-03-15','Hardware','High','10-102','','complete','sorted','hardware components changed',3,'closed',202233345,25999486,222466645);
 
 
 

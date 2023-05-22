@@ -18,6 +18,7 @@ app.post("/staff/createRequest", (req, res) => {
     category: req.body.category,
     venue:req.body.venue,
     image:req.body.image,
+    progress:'pending',
     status:'active',
     staff_id:req.body.staff_id};
   const sql = `INSERT INTO work_request SET ?`;
@@ -44,9 +45,9 @@ app.get('/staff/checkStatus',(req,res)=>{
   const sql=`SELECT id,progress FROM work_request WHERE id= "${ref_number}"`;
   connection.query(sql,(err,result)=>{
     if(err){
-      throw err;
+      res.send({message:'An error occured',success:false});
        }else{
-         res.send(result);
+         res.send({result,success:true});
       }
   });
 });
@@ -59,9 +60,9 @@ app.get('/staff/loggedRequests/:staff_id/',(req,res)=>{
             ORDER BY req_date`
     connection.query(sql,(err,result)=>{
       if(err){
-        throw err;
+        res.send({message:'An error occured',success:false});
          }else{
-           res.send(result);
+           res.send({result,success:true});
         }
     })     
 })
