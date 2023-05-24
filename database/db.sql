@@ -8,10 +8,22 @@ CREATE TABLE department(
 );
 
 INSERT INTO department(faculty,department,venue)
-VALUES ('Information Communication Technology','Department of Computer Science','18-G01');
+VALUES ('Information Communication Technology','Department of Computer Science','12-12');
 
 INSERT INTO department(faculty,department,venue)
-VALUES ('Information Communication Technology','Department of Informatics','18-G01');
+VALUES ('Information Communication Technology','Department of Informatics','12-180');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Information Communication Technology','Department of Information Technology','12-G01');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Information Communication Technology','Department of Computer Systems Engineering','12-11');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Information Communication Technology','ICT first years and foundation unit','12-5');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Information Communication Technology','End user computing','12-11');
 
 INSERT INTO department(faculty,department,venue)
 VALUES ('Economics and Finances','Department of Accounting','2-g02');
@@ -41,6 +53,15 @@ INSERT INTO department(faculty,department,venue)
 VALUES ('Science','Department of Biotechnology and food technology','10-12');
 
 INSERT INTO department(faculty,department,venue)
+VALUES ('Science','Department of Animal sciences','10-121');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Science','Adelaide Tambo School of nursing sciences','10-101');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Science','Mathematics and sciences','10-101');
+
+INSERT INTO department(faculty,department,venue)
 VALUES ('Engineering and the Built Environment','Department of architecture and industrial design','21-1');
 
 INSERT INTO department(faculty,department,venue)
@@ -65,7 +86,27 @@ INSERT INTO department(faculty,department,venue)
 VALUES ('Engineering and the Built Environment','Mechanical and mechatronics engineering','21-1');
 
 INSERT INTO department(faculty,department,venue)
-VALUES ('Humanities','Department of architecture and industrial design','30-1');
+VALUES ('Humanities','Department Applied languages','17-1');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Humanities','Department Integrated Communication','17-1');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Humanities','Department of law','17-3');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Humanities','Department of Public management','17-3');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Humanities','Department of Safety and security management','17-3');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Humanities','Department of Safety and security management','17-3');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Humanities','School of Education','17-3');
+
+
 
 CREATE TABLE hod(
   hod_id INT PRIMARY KEY NOT NULL,
@@ -78,8 +119,12 @@ CREATE TABLE hod(
   FOREIGN KEY (department_id) REFERENCES department(department_id)
 );
 
+
 INSERT INTO hod(hod_id,name,surname,email,campus,password,department_id)
-VALUES(225896874,'Leon','Tyson','tyson@tut.ac.za','Soshanguve South','adminHOD',1);
+VALUES(225896874,'JC','Janse van Vuuren','tyson@tut.ac.za','Soshanguve South','admin',1);
+
+INSERT INTO hod(hod_id,name,surname,email,campus,password,department_id)
+VALUES(215890874,'RC','Mogase','mogase@tut.ac.za','Soshanguve South','admin',1);
 
 CREATE TABLE staff(
 staff_id BIGINT NOT NULL PRIMARY KEY,

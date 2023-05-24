@@ -38,7 +38,7 @@ module.exports = app => {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                               /*DISPLAYS THOSE THAT THAVE HAVE LOGGED A REQUEST*/
   app.get("/admin/viewRequester",(req,res)=>{
-    sql=`SELECT DISTINCT s.staff_name,s.staff_surname,s.email,d.faculty,d.department,s.campus
+    sql=`SELECT DISTINCT s.staff_name,s.staff_surname,s.email,d.faculty,d.department,s.campus,s.staff_id
     FROM work_request w,staff s,department d 
     WHERE s.staff_id=w.staff_id
     AND s.department_id=d.department_id`;
