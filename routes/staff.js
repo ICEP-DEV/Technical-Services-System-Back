@@ -2,6 +2,8 @@ const express = require('express');
 //const { body } = require('express-validator');
 const dbConnection = require('../config/connection');
 const Joi=require('@hapi/joi');
+const { result } = require('@hapi/joi/lib/base');
+const { body } = require('express-validator');
 
 
 module.exports = app => {
@@ -121,4 +123,28 @@ if(error){
       }
   });
 });
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**                                                DUPLICATE HANDLING */
+app.post('/staff/getDuplicates',(req,res)=>{
+  let category=req.body.category;
+  let venue=req.body.venue;
+  const sql=`SELECT category,venue
+            FROM work_request
+            WHERE EXISTS
+            (SELECT *
+            FROM work_request
+            WHERE category LIKE '%${category}%'
+           AND venue LIKE '%${venue}%'); `
+  connection.query(sql,(err,result)=>{
+    if(err){
+        res.send({message:`an error occured!`})
+    }if(result.length>0){
+        res.send(result)
+    }
+  })
+})
 };

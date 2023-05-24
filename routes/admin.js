@@ -110,7 +110,7 @@ app.post('/admin/assignTechnician/:id',(req,res)=>{
   let assigned_date=new Date().toISOString().slice(0, 10);
   const sql=`UPDATE work_request 
             SET status="active",
-            progress="In-progress",
+            progress="in-progress",
             tech_id=${tech_id},
             assigned_date=${assigned_date}
             WHERE id=${req.params.id}`
@@ -134,10 +134,10 @@ app.post('/admin/assignTechnician/:id',(req,res)=>{
               AND a.id=${req.params.id}`;
   connection.query(sql,(err,result)=>{
     if(err){
-      res.send({message:`An error occcured`});
+      res.send({message:`An error occcured`,success:false});
     }
     if(result.length>0){
-    res.send(result);
+    res.send({result,success:true});
     }
   });
  }); 
@@ -164,7 +164,7 @@ app.get('/admin/viewInProgressTasks',(req,res)=>{
             WHERE l.tech_id=t.tech_id AND l.staff_id=s.staff_id AND l.progress='in-progress' `;
  connection.query(sql,(err,result)=>{
   if(err){
-   res.send({message:`An error occured`});
+   res.send({message:`An error occured`,success:false});
   }
   if(result.length>0){
   res.send(result);

@@ -40,8 +40,46 @@ VALUES ('Science','Department of Physics','18-12');
 INSERT INTO department(faculty,department,venue)
 VALUES ('Science','Department of Biotechnology and food technology','10-12');
 
+INSERT INTO department(faculty,department,venue)
+VALUES ('Engineering and the Built Environment','Department of architecture and industrial design','21-1');
 
+INSERT INTO department(faculty,department,venue)
+VALUES ('Engineering and the Built Environment','Department of building sciences','21-g6');
 
+INSERT INTO department(faculty,department,venue)
+VALUES ('Engineering and the Built Environment','Department of chemical ,metallurgical and materials engineering','21-10');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Engineering and the Built Environment','Department of civil engineering','20-21');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Engineering and the Built Environment','Department of electrical engineering','21-5');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Engineering and the Built Environment','Department of geomatics','21-1');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Engineering and the Built Environment','Department of industrial engineering','21-1');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Engineering and the Built Environment','Mechanical and mechatronics engineering','21-1');
+
+INSERT INTO department(faculty,department,venue)
+VALUES ('Humanities','Department of architecture and industrial design','30-1');
+
+CREATE TABLE hod(
+  hod_id INT PRIMARY KEY NOT NULL,
+  name VARCHAR(45),
+  surname VARCHAR(45),
+  email VARCHAR(45),
+  campus VARCHAR(45),
+  password VARCHAR(45),
+  department_id INT,
+  FOREIGN KEY (department_id) REFERENCES department(department_id)
+);
+
+INSERT INTO hod(hod_id,name,surname,email,campus,password,department_id)
+VALUES(225896874,'Leon','Tyson','tyson@tut.ac.za','Soshanguve South','adminHOD',1);
 
 CREATE TABLE staff(
 staff_id BIGINT NOT NULL PRIMARY KEY,
