@@ -1,7 +1,7 @@
 const { result } = require('@hapi/joi/lib/base');
 const { body } = require('express-validator');
 const dbConnection = require('../config/connection');
-
+const data_exporter= require('json2csv').Parser;
 
 module.exports = app => {
   const connection = dbConnection();
@@ -21,7 +21,7 @@ module.exports = app => {
          FROM work_request w,staff s 
          WHERE s.staff_id=w.staff_id
          AND w.status='active'
-         AND staff_id=${req.params.staff_id}`;
+         AND w.staff_id=${req.params.staff_id}`;
     connection.query(sql, (err, result) => {
       if(err)
       {
@@ -355,6 +355,26 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
   })          
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                          /*EXPORT ALL REQUEST*/
+  app.get('/admin/export',(req,res)=>{
+    const sql=`SELECT w.id,w.req_date,w.category,s.campus
+               FROM work_request w, staff s
+               WHERE s.staff_id =w.staff_id`;
+    connection.query(sql,(err,result)=>{
+      if(err){
+          res.send('Something went wrong...')
+      }
+      if(result.length>0){
+        let mysql_data=JSON.parse(JSON.stringify(result));
+        let file_header= ['Reference Number','Request Date','Category','Campus'];
+        let json_data=new data_exporter({file_header});
+        var csv_data=json_data.parse(mysql_data);
+        res.setHeader("Content-Type","text/csv");
+        res.setHeader("Content-Disposition","attachment; filename=requests.csv");
+        res.status(200).end(csv_data);
+    }
+    });           
+  });
 
 };
 

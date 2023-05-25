@@ -124,7 +124,7 @@ INSERT INTO hod(hod_id,name,surname,email,campus,password,department_id)
 VALUES(225896874,'JC','Janse van Vuuren','tyson@tut.ac.za','Soshanguve South','admin',1);
 
 INSERT INTO hod(hod_id,name,surname,email,campus,password,department_id)
-VALUES(215890874,'RC','Mogase','mogase@tut.ac.za','Soshanguve South','admin',1);
+VALUES(215890874,'RC','Mogase','mogase@tut.ac.za','Soshanguve South','admin',2);
 
 CREATE TABLE staff(
 staff_id BIGINT NOT NULL PRIMARY KEY,
