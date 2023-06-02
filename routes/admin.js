@@ -55,7 +55,7 @@ module.exports = app => {
   });
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   app.get('/admin/viewAll',(req,res)=>{
-    const sql=`SELECT * FROM work_request WHERE status='active' ORDER BY req_date`;
+    const sql=`SELECT * FROM work_request WHERE status='active' ORDER BY req_date DESC`;
     connection.query(sql,(err,result)=>{
       if(err){
         res.send({message:`An error ocurred`});
@@ -119,7 +119,7 @@ app.get('/admin/availableTechnician/:id',(req,res)=>{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
-app.post('/admin/assignTechnician/:id',(req,res)=>{
+app.put('/admin/assignTechnician/:id',(req,res)=>{
   let tech_id=req.body.tech_id;
   let admin_id=req.body.admin_id;
   const sql=`UPDATE work_request 

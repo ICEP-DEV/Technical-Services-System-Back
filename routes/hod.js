@@ -38,7 +38,7 @@ app.post('/hod/login',(req,res)=>{
     if(result.length>0){
       if(result[0].password == password){
          res.send({
-            message:`Hello ${result[0].name} ${result[0].surname}You've Successfully logged in!`,
+            message:`Hello ${result[0].name} ${result[0].surname}, You've Successfully logged in!`,
             success:true
           });
           console.log(result)
