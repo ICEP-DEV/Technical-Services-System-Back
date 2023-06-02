@@ -1,5 +1,6 @@
 const { result } = require('@hapi/joi/lib/base');
 const { body } = require('express-validator');
+const { json } = require('express/lib/response');
 const dbConnection = require('../config/connection');
 const data_exporter= require('json2csv').Parser;
 
@@ -52,17 +53,30 @@ module.exports = app => {
       }
     })
   });
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  app.get('/admin/viewAll',(req,res)=>{
+    const sql=`SELECT * FROM work_request WHERE status='active' ORDER BY req_date`;
+    connection.query(sql,(err,result)=>{
+      if(err){
+        res.send({message:`An error ocurred`});
+      }else{
+        res.send({
+          result
+      });
+      }
+    });
+  });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                         ////THE ADIM SETS THE PRIORITY OF THE REQUEST
 
-app.post("/admin/setPriority/:id",(req,res)=>{
+app.put("/admin/setPriority/:id",(req,res)=>{
   let priority=req.body.priority;
-  const sql=`UPDATE work_request SET priority=? WHERE id='${req.params.id}'`;
+  const sql=`UPDATE work_request SET priority=?, progress='acknowlegded' WHERE id='${req.params.id}'`;
   connection.query(sql,priority,(err,result)=>{
     if(err){
       res.send({message:`An error occured`});
   }
-  if(result.length>0){
+  else{
   res.send({message:'Priority of task set'}); 
   }
   })
@@ -97,7 +111,7 @@ app.get('/admin/availableTechnician/:id',(req,res)=>{
       res.send({message:"could not fetch data",
         success:false});
   }
-  if(result.length>0){
+  else{
   res.send(result);
   }
   })
@@ -107,19 +121,20 @@ app.get('/admin/availableTechnician/:id',(req,res)=>{
                                                      /*ASSIGN A TECHNICIAN*/
 app.post('/admin/assignTechnician/:id',(req,res)=>{
   let tech_id=req.body.tech_id;
-  let assigned_date=new Date().toISOString().slice(0, 10);
+  let admin_id=req.body.admin_id;
   const sql=`UPDATE work_request 
             SET status="active",
             progress="in-progress",
-            tech_id=${tech_id},
-            assigned_date=${assigned_date}
-            WHERE id=${req.params.id}`
+            tech_id='${tech_id}',
+            assigned_date='${ new Date().toJSON().slice(0, 10)}',
+            admin_id='${admin_id}'
+            WHERE id='${req.params.id}'`
   connection.query(sql,(err,result)=>{
     if(err){
       res.send({message:"An error occured",
         success:false});
   }
-  if(result.length>0){
+  else{
     res.send({message:'Technician assigned to task',success:true}); 
    }
   });
@@ -254,15 +269,14 @@ app.post('/admin/login',(req,res)=>{
     if(result.length>0){
       if(result[0].password == password){
          res.send({
-            message:'Successfully Logged In!',
+            message:`Hello ${result[0].name} ${result[0].surname}You've Successfully logged in!`,
             admin_id,
             success:true
           });
-          console.log(result)
       }
       else{
         res.send({
-          message:"Incorrect Details!",
+          message:"Please enter correct password!",
           success:false
         });
         
@@ -270,7 +284,7 @@ app.post('/admin/login',(req,res)=>{
     }else
     {
       res.send({
-        message:"Incorrect Details!",
+        message:"Please enter correct email!",
         success:false
       });
     }
@@ -355,11 +369,18 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
   })          
 });
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                          /*EXPORT ALL REQUEST*/
+                                          /*EXPORT ALL REQUEST TO EXCEL*/
   app.get('/admin/export',(req,res)=>{
-    const sql=`SELECT w.id,w.req_date,w.category,s.campus
-               FROM work_request w, staff s
-               WHERE s.staff_id =w.staff_id`;
+    const sql=`SELECT w.id  AS Reference_Number,
+                      w.req_date AS Request_Date,
+                      w.category AS Category,
+                      s.campus AS Campus,
+                      d.department AS Department,
+                      CONCAT(SUBSTRING(s.staff_name,1,1),' ',s.staff_surname) AS Complainant ,
+                      w.status AS Status
+               FROM work_request w, staff s, department d
+               WHERE s.staff_id =w.staff_id
+               AND d.department_id=s.department_id`;
     connection.query(sql,(err,result)=>{
       if(err){
           res.send('Something went wrong...')
@@ -375,7 +396,46 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
     }
     });           
   });
-
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /*                                                     FILTER BY DATES                                                                       */
+  app.get('/admin/searchByDates',(req,res)=>{
+    date_1=req.body.date_1;
+    date_2=req.body.date_2;
+    
+    const sql =`SELECT  description,category
+                FROM work_request
+                WHERE req_date BETWEEN '${date_1}'AND '${date_2}'`;
+    connection.query(sql,(err,result)=>{
+      if(err){
+        res.send({message:`Something went wrong...`,success:false});
+      }else{
+        res.send({result,success:true})
+      }
+    });            
+  });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*                                                      FILTER BY DEPT*/
+  app.get('/admin/searchByDeptment',(req,res)=>{
+    department=req.body.department;
+    const sql=`SELECT w.id,
+                          s.staff_name,
+                          s.staff_surname,
+                          w.req_date,
+                          w.category,
+                          w.status,
+                          w.progress
+                 FROM work_request w,staff s,department d
+                 WHERE w.staff_id=s.staff_id
+                 AND s.department_id = d.department_id
+                 AND d.department='${department}'`;
+    connection.query(sql,(err,result)=>{
+       if(err){
+         res.send({message:`Something went wrong...`,success:false});
+        }else{
+            res.send({result,success:true})
+        }
+    });              
+  })
 };
 
 

@@ -21,8 +21,14 @@ module.exports = app => {
     /**                                     TECHNICIAN UPDATE THEIR PROGRESS OF TASK                                                 */
   app.post('/technician/updateTask/:id',(req,res)=>{
     let progress=req.body.progress;
-    const sql=`UPDATE work_request SET progress=? 
+    let sql;
+    if(progress=='complete'){
+      sql=`UPDATE work_request SET progress=?,completed_date='${ new Date().toJSON().slice(0, 10)}' 
+      WHERE id='${req.params.id}' `
+    }else{
+      sql=`UPDATE work_request SET progress=? 
               WHERE id='${req.params.id}' `;
+     }
     connection.query(sql,progress,(err,result)=>{
       if(err){
           res.send({message:"An error occured",succes:false});
@@ -60,7 +66,7 @@ module.exports = app => {
       }else
       {
         res.send({
-          message:"Incorrect Details!",
+          message:"Please enter correct ID!",
           success:false
         });
       }

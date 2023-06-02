@@ -148,7 +148,7 @@ INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,de
 VALUES (202123345,'Johanna','McAthurthy','mcathurthy4@tut4life.ac.za','0127778360','female','Soshanguve South',1);
 
 INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
-VALUES (212879345,'Thabo','Mokoena','mokoanaThab0@tut4life.ac.za','0129354560','male','Arcadia',9);
+VALUES (212879345,'Thabo','Mokoena','mokoanaThab0@tut4life.ac.za','0129354560','male','Arcadia',15);
 
 INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
 VALUES (202458345,'Dikeledi','Moepi','moepi@tut4life.ac.za','0127878360','female','Ga-rankuwa',5);

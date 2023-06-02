@@ -41,7 +41,7 @@ app.post("/staff/createRequest", (req, res) => {
   });
 });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                            ///VIEW PROGRESS OF RERQUEST///
+                                                            ///VIEW PROGRESS OF REQUEST///
 app.get('/staff/checkStatus',(req,res)=>{
   let ref_number=req.body.ref_number;///staff inputs the the reference number of request
   const sql=`SELECT id,progress FROM work_request WHERE id= "${ref_number}"`;
@@ -56,9 +56,10 @@ app.get('/staff/checkStatus',(req,res)=>{
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                                      VIEW MY REQUESTS                                                                  */
 app.get('/staff/loggedRequests/:staff_id/',(req,res)=>{
-    const sql=`SELECT id,description,category,req_date,venue,progress,status
+    const sql=`SELECT id,description,category,req_date,venue,progress,status,tech_id
             FROM work_request
             WHERE staff_id ="${req.params.staff_id}"
+            AND status='active'
             ORDER BY req_date`
     connection.query(sql,(err,result)=>{
       if(err){
@@ -76,7 +77,7 @@ app.get('/staff/loggedRequests/:staff_id/',(req,res)=>{
     const sql=`UPDATE work_request
             SET staff_feedback= ?
                 ,rating =?
-               WHERE id=?`;///reference
+               WHERE id=?`;///reference-number
     connection.query(sql,[staff_feedback,rating,id],(err,result)=>{
       if(err){
         res.send({mesaage:'Could not process feedback'});
@@ -102,7 +103,7 @@ if(error){
     message:"invalid request"
   })
 }*/
-
+   console.log(staff_id);
   const sql=`SELECT * FROM staff
              WHERE staff_id=${staff_id}`;
   connection.query(sql,(err,result)=>{
