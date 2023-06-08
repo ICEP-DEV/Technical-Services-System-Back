@@ -40,7 +40,6 @@ module.exports = app => {
      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**                                     TECHNICIAN LOG-IN AUTHENTICATION                                                */
    app.post('/technician/login',(req,res)=>{
-    let tech_email=req.body.technician_email;
     let tech_id=req.body.tech_id;
     let password=req.body.password;
     const sql=`SELECT * 

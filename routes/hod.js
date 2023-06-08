@@ -4,7 +4,7 @@ dbconnection= require('../config/connection');
 module.exports=app=>{
  const connection=dbconnection();
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*                                          VIEW DEPATMENT REQUESTS*/
+/*                                          VIEW DEPARTMENT REQUESTS*/
    app.get('/hod/getDept-Requests/:hod_id',(req,res)=>{
         const sql=`SELECT w.id,
                           s.staff_name,
