@@ -100,7 +100,7 @@ app.get("/admin/viewRequest/:id",(req,res)=>{
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       VIEW AVAILABLE TECHNICIANS*/
 app.get('/admin/availableTechnician/:id',(req,res)=>{
-  const sql=`SELECT t.tech_id,t.name,t.surname 
+  const sql=`SELECT t.tech_id,t.name,t.surname,t.phone,t.email
              FROM technician t,division d,work_request w 
              WHERE availability='available'
              AND d.id=t.division_id
@@ -119,15 +119,14 @@ app.get('/admin/availableTechnician/:id',(req,res)=>{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
-app.put('/admin/assignTechnician/:id',(req,res)=>{
+app.post('/admin/assignTechnician/:id',(req,res)=>{
   let tech_id=req.body.tech_id;
   let admin_id=req.body.admin_id;
   const sql=`UPDATE work_request 
-            SET status="active",
-            progress="in-progress",
-            tech_id='${tech_id}',
-            assigned_date='${ new Date().toJSON().slice(0, 10)}',
-            admin_id='${admin_id}'
+            SET progress='in-progress',
+                tech_id='${tech_id}',
+                 assigned_date='${ new Date().toJSON().slice(0, 10)}',
+                 admin_id='${admin_id}'
             WHERE id='${req.params.id}'`
   connection.query(sql,(err,result)=>{
     if(err){
@@ -189,7 +188,12 @@ app.get('/admin/viewInProgressTasks',(req,res)=>{
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                VIEW COMPLETED TASKS                                                                           */
 app.get('/admin/viewCompletedTasks',(req,res)=>{
-  const sql=`SELECT l.id,l.description,t.name,l.progress,s.staff_name 
+  const sql=`SELECT l.id,
+                    l.description,
+                    t.name,t.surname,
+                    l.progress,
+                    s.staff_name,s.staff_surname,
+                    DATEDIFF(l.completed_date, l.req_date) AS Duration
             FROM technician t,work_request l,staff s 
             WHERE l.tech_id=t.tech_id AND l.staff_id=s.staff_id AND l.progress='complete' `;
   connection.query(sql,(err,result)=>{
@@ -200,6 +204,24 @@ app.get('/admin/viewCompletedTasks',(req,res)=>{
   }
   });
  });
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                         /* NUmber completed*/
+ app.get('/admin/viewTotalComplete',(req,res)=>{
+  const sql=`SELECT count(id) AS total_completed
+            FROM technician t,work_request l,staff s 
+            WHERE l.tech_id=t.tech_id AND l.staff_id=s.staff_id AND l.progress='complete' `;
+  connection.query(sql,(err,result)=>{
+   if(err){
+     res.send({message:`Process failed...`});
+   }if(result.length>0){
+   res.send(result);
+  }
+  });
+ });
+
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                                 ADD  TECHNICIAN                                                                                */
 app.post('/admin/addTechnician',(req,res)=>{
@@ -227,6 +249,25 @@ app.post('/admin/addTechnician',(req,res)=>{
 /**                                             VIEW ALL TECHNICIAN IN THE SYSTEM                                                             */
 app.get('/admin/viewAllTechnicians',(req,res)=>{
   const sql= `SELECT t.tech_id,t.name,t.surname,t.phone,t.email,d.division_name  
+              FROM technician t,division d
+              WHERE t.division_id =d.id`;
+  connection.query(sql,(err,result)=>{
+    if(err)
+    {
+        throw err;
+    }
+    if(result.length>0)
+    {
+        res.send(result);
+    }
+  });
+});
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                    /*VIEW TOTAL NUMBER OF TECHNICIANS*/
+app.get('/admin/viewNumTechnicians',(req,res)=>{
+  const sql= `SELECT COUNT(tech_id) AS total_tech
               FROM technician t,division d
               WHERE t.division_id =d.id`;
   connection.query(sql,(err,result)=>{
@@ -273,6 +314,7 @@ app.post('/admin/login',(req,res)=>{
             admin_id,
             success:true
           });
+          console.log(result);
       }
       else{
         res.send({
@@ -303,11 +345,11 @@ app.get('/admin/deleteRequest/:id',(req,res)=>{
       else{
         res.send({message:`"${req.params.id}" deleted`});
       }
-    })
+    });
 });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                           CLOSE LOG                                                 */
-app.post('/admin/log-close/:id',(req,res)=>{
+app.put('/admin/log-close/:id',(req,res)=>{
   const sql=`UPDATE work_request 
             SET status='closed'
             WHERE id='${req.params.id}'`;
@@ -317,10 +359,26 @@ app.post('/admin/log-close/:id',(req,res)=>{
                 success:true});
     }else{
       res.send({message:`Log ${req.params.id} closed!`,
-                  success:true})
+                  success:true});
     }
-  })          
-})
+  });         
+});
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**                                       RE-ACTIVATE log                                                                */
+app.put('/admin/log-activate/:id',(req,res)=>{
+    const sql=`UPDATE work_request
+              SET status='active'
+              WHERE id = '${req.params.id}'`;
+    connection.query(sql,(err,result)=>{
+      if(err){
+        res.send({message:`An error occured!`,
+                  success:true});
+      }else{
+        res.send({message:`Log ${req.params.id} has been re-activated!`,
+                    success:true});
+      }
+    });          
+});
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                               *SEARCH BY CAMPUS*/
 app.get('/admin/getCampusRequests',(req,res)=>{
@@ -415,7 +473,7 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
   });
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                      FILTER BY DEPT*/
-  app.get('/admin/searchByDeptment',(req,res)=>{
+  app.get('/admin/searchByDepartment',(req,res)=>{
     department=req.body.department;
     const sql=`SELECT w.id,
                           s.staff_name,
@@ -437,6 +495,3 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
     });              
   })
 };
-
-
-

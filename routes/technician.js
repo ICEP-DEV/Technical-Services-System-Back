@@ -6,7 +6,7 @@ module.exports = app => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                     TECHNICIAN VIEWS TASKS ASSIGNED THEM                                                    */  
   app.get('/technician/tasks/:tech_id',(req,res)=>{
-    const sql=`SELECT w.category,w.description, w.priority, w.venue,w.progress 
+    const sql=`SELECT w.id,w.category,w.description, w.priority, w.venue,w.progress 
               FROM work_request w,technician t 
               WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}';`
     connection.query(sql,(err,result)=>{
@@ -19,7 +19,7 @@ module.exports = app => {
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**                                     TECHNICIAN UPDATE THEIR PROGRESS OF TASK                                                 */
-  app.post('/technician/updateTask/:id',(req,res)=>{
+  app.put('/technician/updateTask/:id',(req,res)=>{
     let progress=req.body.progress;
     let sql;
     if(progress=='complete'){
@@ -31,7 +31,7 @@ module.exports = app => {
      }
     connection.query(sql,progress,(err,result)=>{
       if(err){
-          res.send({message:"An error occured",succes:false});
+          res.send({message:"An error occured",success:false});
       }
       res.send({message:"Progress updated!",success:true
     });

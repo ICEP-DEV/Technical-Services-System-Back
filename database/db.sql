@@ -153,7 +153,8 @@ VALUES (212879345,'Thabo','Mokoena','mokoanaThab0@tut4life.ac.za','0129354560','
 INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
 VALUES (202458345,'Dikeledi','Moepi','moepi@tut4life.ac.za','0127878360','female','Ga-rankuwa',5);
 
-
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
+VALUES (212453459,'Marcia','Smith','marciSmith@tut.ac.za','0127796360','female','Pretoria',5);
 
 
   CREATE TABLE administrator(
@@ -208,7 +209,18 @@ INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,divi
 VALUES(25897486,'John','Black','0124578987','john@tut.ac.za','male','available',1,'soshanguve south','john%Bl@ck');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
-VALUES(25999486,'Sam','Modise','01245745981','sammodise@tut.ac.za','male','available',2,'soshanguve south','s@mModI~3');
+VALUES(25999486,'Sam','Modise','0124574581','sammodise@tut.ac.za','male','available',2,'soshanguve south','s@mModI~3');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25997850,'Tebogo','Zwane','0124345666','tebogoZwane@tut.ac.za','male','available',5,'soshanguve south','tebogo');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25997936,'Xolile','Dube','0128745963','xoliDube@tut.ac.za','male','available',5,'Acardia','1xoli');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25997859,'Sifiso','Khumalo','0124347852','Skhumalo@tut.ac.za','female','available',2,'soshanguve south','sifis0');
+
+
 
 
 CREATE TABLE work_request(
@@ -238,7 +250,7 @@ INSERT INTO work_request(id,description,req_date,category,priority,venue,image,p
 VALUES(1678884550556,'Leaking taps','2023-03-20','Plumbing','High','10-g28','','in-progress','active',202233345,25897486,222424345);
 
 INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,admin_id,tech_id,staff_id)
-VALUES(1678784590556,'Blue screen','2023-03-06','Hardware','High','10-112','','complete','the issue is sorted','done with task',4,'closed',202233345,25999486,212879345);
+VALUES(1678784590556,'Blue screen','2023-03-06','Hardware','High','10-112','','complete','the issue is sorted','done with task',4,'active',202233345,25999486,212879345);
 
 INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,admin_id,tech_id,staff_id)
 VALUES(1678684550957,'PC not switching on','2023-03-15','Hardware','High','10-102','','complete','sorted','hardware components changed',3,'closed',202233345,25999486,222466645);
