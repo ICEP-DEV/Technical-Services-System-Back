@@ -36,6 +36,23 @@ module.exports = app => {
       }
     });
   });
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                                     /**VIEW ALL REQUESTS IN SYSTEM */
+  app.get("/admin/requests", (req, res) => {
+    sql=`SELECT * FROM work_request ORDER BY req_date DESC`;
+    connection.query(sql, (err, result) => {
+      if(err)
+      {
+         res.send({message:`An error occured`});
+      }
+      if(result.length>0)
+      {
+          res.send({
+              result
+          });
+      }
+    });
+  });
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                               /*DISPLAYS THOSE THAT THAVE HAVE LOGGED A REQUEST*/
   app.get("/admin/viewRequester",(req,res)=>{
@@ -54,6 +71,7 @@ module.exports = app => {
     })
   });
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                                            /*VIEWS ALL ACTIVE REQUESTS*/
   app.get('/admin/viewAll',(req,res)=>{
     const sql=`SELECT * FROM work_request WHERE status='active' ORDER BY req_date DESC`;
     connection.query(sql,(err,result)=>{
@@ -300,17 +318,16 @@ app.get('/admin/totalRequests',(req,res)=>{
  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  /*                                              LOGIN-AUTHENTICATION                                                                            */
 app.post('/admin/login',(req,res)=>{
-  let admin_email=req.body.admin_email;
   let admin_id=req.body.admin_id;
   let password=req.body.password;
   const sql=`SELECT * 
             FROM administrator 
-            WHERE email="${admin_email}" OR admin_id="${admin_id}"`;
+            WHERE admin_id="${admin_id}"`;
   connection.query(sql,(err,result)=>{
     if(result.length>0){
       if(result[0].password == password){
          res.send({
-            message:`Hello ${result[0].name} ${result[0].surname}You've Successfully logged in!`,
+            message:`Hello ${result[0].admin_name} ${result[0].admin_surname}, You've Successfully logged in!`,
             admin_id,
             success:true
           });
@@ -326,7 +343,7 @@ app.post('/admin/login',(req,res)=>{
     }else
     {
       res.send({
-        message:"Please enter correct email!",
+        message:"Please enter correct ID!",
         success:false
       });
     }
@@ -435,7 +452,7 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
                       s.campus AS Campus,
                       d.department AS Department,
                       CONCAT(SUBSTRING(s.staff_name,1,1),' ',s.staff_surname) AS Complainant ,
-                      w.status AS Status
+                      w.status AS Status,
                FROM work_request w, staff s, department d
                WHERE s.staff_id =w.staff_id
                AND d.department_id=s.department_id`;
@@ -454,6 +471,68 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
     }
     });           
   });
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /**      
+   *                                        EXPORT CLOSED LOGS                                                       */
+  app.get('/admin/export-closed',(req,res)=>{  
+    const sql=`SELECT w.id  AS Reference_Number,
+              w.req_date AS Request_Date,
+              w.category AS Category,
+              s.campus AS Campus,
+              d.department AS Department,
+              CONCAT(SUBSTRING(s.staff_name,1,1),' ',s.staff_surname) AS Complainant ,
+              w.status AS Status,
+              CONCAT(SUBSTRING(t.name,1,1),' ',t.surname) AS Dispatched_Technician,
+              DATEDIFF(w.completed_date, w.req_date) AS Duration
+              FROM work_request w, staff s, department d,technician t
+              WHERE s.staff_id =w.staff_id
+              AND d.department_id=s.department_id
+              AND w.status='closed'`
+    connection.query(sql,(err,result)=>{
+      if(err){
+        res.send('Something went wrong...')
+       }
+      if(result.length>0){
+          let mysql_data=JSON.parse(JSON.stringify(result));
+          let file_header= ['Reference Number','Request Date','Category','Campus'];
+          let json_data=new data_exporter({file_header});
+          var csv_data=json_data.parse(mysql_data);
+          res.setHeader("Content-Type","text/csv");
+          res.setHeader("Content-Disposition","attachment; filename=Closed-requests.csv");
+          res.status(200).end(csv_data);
+         }
+       });           
+    });
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /**      
+   *                                        EXPORT ACTIVE LOGS                                                       */
+  app.get('/admin/export-active',(req,res)=>{  
+    const sql=`SELECT w.id  AS Reference_Number,
+              w.req_date AS Request_Date,
+              w.category AS Category,
+              s.campus AS Campus,
+              d.department AS Department,
+              CONCAT(SUBSTRING(s.staff_name,1,1),' ',s.staff_surname) AS Complainant ,
+              w.status AS Status
+              FROM work_request w, staff s, department d,technician t
+              WHERE s.staff_id =w.staff_id
+              AND d.department_id=s.department_id
+              AND w.status='active'`
+    connection.query(sql,(err,result)=>{
+      if(err){
+        res.send('Something went wrong...')
+       }
+      if(result.length>0){
+          let mysql_data=JSON.parse(JSON.stringify(result));
+          let file_header= ['Reference Number','Request Date','Category','Campus','Department','Complainant','Status'];
+          let json_data=new data_exporter({file_header});
+          var csv_data=json_data.parse(mysql_data);
+          res.setHeader("Content-Type","text/csv");
+          res.setHeader("Content-Disposition","attachment; filename=Active-requests.csv");
+          res.status(200).end(csv_data);
+         }
+       });           
+    });
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /*                                                     FILTER BY DATES                                                                       */
   app.get('/admin/searchByDates',(req,res)=>{
@@ -494,4 +573,6 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
         }
     });              
   })
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /**                                                         */
 };
