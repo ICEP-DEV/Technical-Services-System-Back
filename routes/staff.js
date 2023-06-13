@@ -72,17 +72,15 @@ app.get('/staff/loggedRequests/:staff_id/',(req,res)=>{
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                             ///STAFF SENDING FEEDBACK///
   app.put("/staff/sendFeedback/:id",(req,res)=>{
-   let{staff_feedback,rating}=req.body;
+   let staff_feedback=req.body.staff_feedback;
     const sql=`UPDATE work_request
-            SET staff_feedback= ?
-                ,rating =?
-               WHERE id=${req.params.id}`;///reference-number
-    connection.query(sql,[staff_feedback,rating],(err,result)=>{
+            SET staff_feedback=?
+               WHERE id=?`;///reference-number
+    connection.query(sql, [staff_feedback, req.params.id],(err,result)=>{
       if(err){
         res.send({mesaage:'Could not process feedback'});
-      }if(result.length>0){
-        res.send({mesaage:'Feedback submitted',result});
-        console.log(({mesaage:'Feedback submitted',result}))
+      }else{
+        res.send({mesaage:'Feedback submitted',result,success:true}); 
       } 
     });
   });

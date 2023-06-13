@@ -255,11 +255,14 @@ VALUES(1678784590556,'Blue screen','2023-03-06','Hardware','High','10-112','','c
 INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,admin_id,tech_id,staff_id)
 VALUES(1678684550957,'PC not switching on','2023-03-15','Hardware','High','10-102','','complete','sorted','hardware components changed',3,'closed',202233345,25999486,222466645);
 
+INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id)
+VALUES(1678584897459,'No hot water','2023-04-20','Electrical','High','11-62','','complete','sorted','thermostat replaced',3,'closed','2023-04-23','2023-04-23 ',202233345,25997936,222466645);
 
+INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id)
+VALUES(1678584235896,'Flickering lights','2023-04-10','Electrical','High','4-112','','complete','sorted','lights changed',3,'closed','2023-03-14','2023-04-13 ',202233345,25997936,222466645);
 
-
-
-
+INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id)
+VALUES(1678584330959,'Blocked toilets','2023-03-15','Plumbing','High','10-112','','complete','sorted','pipes changed',3,'closed','2023-03-19','2023-03-19 ',202233345,25897486,222466645);
 
 
 

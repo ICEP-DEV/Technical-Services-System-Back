@@ -95,7 +95,7 @@ app.put("/admin/setPriority/:id",(req,res)=>{
       res.send({message:`An error occured`});
   }
   else{
-  res.send({message:'Priority of task set'}); 
+  res.send({message:'Priority of task set!'}); 
   }
   })
 })
@@ -264,7 +264,7 @@ app.post('/admin/addTechnician',(req,res)=>{
      });
   });  
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**                                             VIEW ALL TECHNICIAN IN THE SYSTEM                                                             */
+/**                                             VIEW ALL TECHNICIANS IN THE SYSTEM                                                             */
 app.get('/admin/viewAllTechnicians',(req,res)=>{
   const sql= `SELECT t.tech_id,t.name,t.surname,t.phone,t.email,d.division_name  
               FROM technician t,division d
@@ -452,7 +452,7 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
                       s.campus AS Campus,
                       d.department AS Department,
                       CONCAT(SUBSTRING(s.staff_name,1,1),' ',s.staff_surname) AS Complainant ,
-                      w.status AS Status,
+                      w.status AS Status
                FROM work_request w, staff s, department d
                WHERE s.staff_id =w.staff_id
                AND d.department_id=s.department_id`;
@@ -574,5 +574,52 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
     });              
   })
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /**                                                         */
+  /**                                                     TECHNICAL SERVICES DATA ANALYSIS              */                                         
+  app.get('/admin/ServiceStatistics',(req,res)=>{
+    const sql_1 =`SELECT count(id) AS complete FROM work_request WHERE progress = 'complete'`;
+    const sql_2=`SELECT count(id) AS total_tasks FROM work_request `;
+    const sql_3=`SELECT count(id) AS closed FROM work_request  WHERE status='closed'`;
+    const sql_4=`SELECT DATEDIFF(completed_date, req_date) AS Duration FROM work_request WHERE progress='complete'`;
+    const sql_5=`SELECT count(id) AS in_progress FROM work_request WHERE progress = 'in-progress'`;
+    const sql_6=`SELECT count(id) AS pending FROM work_request WHERE progress = 'pending'`;
+    const sql_7=`SELECT count(id) AS unassigned FROM work_request WHERE tech_id IS NULL`
+    connection.query(sql_2,(err1,result1)=>{
+      connection.query(sql_1,(err2,result2)=>{
+        connection.query(sql_3,(err3,result3)=>{
+          connection.query(sql_4,(err4,result4)=>{
+            connection.query(sql_5,(err5,result5)=>{
+              connection.query(sql_6,(err6,result6)=>{
+                connection.query(sql_7,(err7,result7)=>{
+                  if(err1 && err2 && err3 && err4){
+                    res.send({message:`Something went wrong with the server...`,success:false});
+                  }
+                  let rate;
+                  let days=0;
+                 if(result1.length>0 && result2.length>0 && result3.length>0 ){
+                   averageComplete=Math.round((result2[0].complete/result1[0].total_tasks)*100);
+                   averageClosed=Math.round((result3[0].closed/result1[0].total_tasks)*100);
+                   averageInprogress=Math.round((result5[0].in_progress/result1[0].total_tasks)*100);
+                   averagePending=Math.round((result6[0].pending/result1[0].total_tasks)*100);
+                   for(let i=0;i<result4.length;i++){
+                         days+=result4[i].Duration;
+                   }
+                   rate=Math.round(days/result4.length);
+
+                   res.send({averageCompleted:averageComplete,/////average percentage of closed logs
+                   averageClosed:averageClosed,///The average percentage of closed logs
+                   LogResolutionRate:rate,//// LogResolutionRate the avverage number of days it takes to resolve a log
+                   averageInProgress:averageInprogress,///The average percentage of inProgress logs
+                   averagePending:averagePending,///////The average percentage of pending logs
+                   totalUnassigned:result7[0].unassigned////Total number of tasks with no assigned artisan
+                            });
+                  }
+                });  
+              });
+            });
+          });
+        });
+       }); 
+    });
+  })
+  
 };
