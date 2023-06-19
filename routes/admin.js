@@ -582,37 +582,177 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
     const sql_4=`SELECT DATEDIFF(completed_date, req_date) AS Duration FROM work_request WHERE progress='complete'`;
     const sql_5=`SELECT count(id) AS in_progress FROM work_request WHERE progress = 'in-progress'`;
     const sql_6=`SELECT count(id) AS pending FROM work_request WHERE progress = 'pending'`;
-    const sql_7=`SELECT count(id) AS unassigned FROM work_request WHERE tech_id IS NULL`
+    const sql_7=`SELECT count(id) AS unassigned FROM work_request WHERE tech_id IS NULL`;
+    const sql_8=`SELECT count(id) AS active FROM work_request WHERE status = 'active'`;
+    const sql_9=`SELECT count(DISTINCT w.id) AS active FROM work_request w,staff s WHERE w.status ='active' AND s.campus='Soshanguve South' AND s.staff_id=w.staff_id`;
+    const sql_10=`SELECT count(DISTINCT w.id) AS complete FROM work_request w,staff s WHERE w.progress ='complete' AND s.campus='Soshanguve South' AND s.staff_id=w.staff_id`;
+    const sql_11=`SELECT count(DISTINCT w.id) AS closed FROM work_request w,staff s WHERE w.status ='closed' AND s.campus='Soshanguve South' AND s.staff_id=w.staff_id`;
+    const sql_12=`SELECT count(DISTINCT w.id) AS total_tasks FROM work_request w,staff s WHERE s.campus='Soshanguve South' AND s.staff_id=w.staff_id`;
+    const sql_13=`SELECT count(DISTINCT w.id) AS active FROM work_request w,staff s WHERE w.status = 'active' AND s.campus='eMalahleni' AND s.staff_id=w.staff_id`;
+    const sql_14=`SELECT count(DISTINCT w.id) AS complete FROM work_request w,staff s WHERE w.progress ='complete' AND s.campus='eMalahleni' AND s.staff_id=w.staff_id`;
+    const sql_15=`SELECT count(DISTINCT w.id) AS closed FROM work_request w,staff s WHERE w.status ='closed' AND s.campus='eMalahleni' AND s.staff_id=w.staff_id`;
+    const sql_16=`SELECT count(DISTINCT w.id) AS total_tasks FROM work_request w,staff s WHERE s.campus='eMalahleni' AND s.staff_id=w.staff_id`;
+    const sql_17=`SELECT count(DISTINCT w.id) AS active FROM work_request w,staff s WHERE w.status = 'active' AND s.campus='Pretoria' AND s.staff_id=w.staff_id`;
+    const sql_18=`SELECT count(DISTINCT w.id) AS complete FROM work_request w,staff s WHERE w.progress ='complete' AND s.campus='Pretoria' AND s.staff_id=w.staff_id`;
+    const sql_19=`SELECT count(DISTINCT w.id) AS closed FROM work_request w,staff s WHERE w.status ='closed' AND s.campus='Pretoria' AND s.staff_id=w.staff_id`;
+    const sql_20=`SELECT count(DISTINCT w.id) AS total_tasks FROM work_request w,staff s WHERE s.campus='Pretoria' AND s.staff_id=w.staff_id`;
+    const sql_21=`SELECT count(DISTINCT w.id) AS active FROM work_request w,staff s WHERE w.status = 'active' AND s.campus='Ga-rankuwa' AND s.staff_id=w.staff_id`;
+    const sql_22=`SELECT count(DISTINCT w.id) AS complete FROM work_request w,staff s WHERE w.progress ='complete' AND s.campus='Ga-rankuwa' AND s.staff_id=w.staff_id`;
+    const sql_23=`SELECT count(DISTINCT w.id) AS closed FROM work_request w,staff s WHERE w.status ='closed' AND s.campus='Ga-rankuwa' AND s.staff_id=w.staff_id`;
+    const sql_24=`SELECT count(DISTINCT w.id) AS total_tasks FROM work_request w,staff s WHERE s.campus='Ga-rankuwa' AND s.staff_id=w.staff_id`;
+    const sql_25=`SELECT count(DISTINCT w.id) AS active FROM work_request w,staff s WHERE w.status = 'active' AND s.campus='Arcadia' AND s.staff_id=w.staff_id`;
+    const sql_26=`SELECT count(DISTINCT w.id) AS complete FROM work_request w,staff s WHERE w.progress ='complete' AND s.campus='Arcadia' AND s.staff_id=w.staff_id`;
+    const sql_27=`SELECT count(DISTINCT w.id) AS closed FROM work_request w,staff s WHERE w.status ='closed' AND s.campus='Arcadia' AND s.staff_id=w.staff_id`;
+    const sql_28=`SELECT count(DISTINCT w.id) AS total_tasks FROM work_request w,staff s WHERE s.campus='Arcadia' AND s.staff_id=w.staff_id`;
+    const sql_29=`SELECT count(DISTINCT w.id) AS active FROM work_request w,staff s WHERE w.status = 'active' AND s.campus='Polokwane' AND s.staff_id=w.staff_id` ;
+    const sql_30=`SELECT count(DISTINCT w.id) AS complete FROM work_request w,staff s WHERE w.progress ='complete' AND s.campus='Polokwane' AND s.staff_id=w.staff_id`;
+    const sql_31=`SELECT count(DISTINCT w.id) AS closed FROM work_request w,staff s WHERE w.status ='closed' AND s.campus='Polokwane' AND s.staff_id=w.staff_id`;
+    const sql_32=`SELECT count(DISTINCT w.id) AS total_tasks FROM work_request w,staff s WHERE s.campus='Polokwane' AND s.staff_id=w.staff_id`;
+    const sql_33=`SELECT count(DISTINCT w.id) AS active FROM work_request w,staff s WHERE w.status = 'active' AND s.campus='Soshanguve North' AND s.staff_id=w.staff_id`;
+    const sql_34=`SELECT count(DISTINCT w.id) AS complete FROM work_request w,staff s WHERE w.progress ='complete' AND s.campus='Soshanguve North' AND s.staff_id=w.staff_id`;
+    const sql_35=`SELECT count(DISTINCT w.id) AS closed FROM work_request w,staff s WHERE w.status ='closed' AND s.campus='Soshanguve North' AND s.staff_id=w.staff_id`;
+    const sql_36=`SELECT count(DISTINCT w.id) AS total_tasks FROM work_request w,staff s WHERE s.campus='Soshanguve North' AND s.staff_id=w.staff_id`;
+    const sql_37=`SELECT count(DISTINCT w.id) AS active FROM work_request w,staff s WHERE w.status = 'active' AND s.campus='Arts' AND s.staff_id=w.staff_id`;
+    const sql_38=`SELECT count(DISTINCT w.id) AS complete FROM work_request w,staff s WHERE w.progress ='complete' AND s.campus='Arts' AND s.staff_id=w.staff_id`;
+    const sql_39=`SELECT count(DISTINCT w.id) AS closed FROM work_request w,staff s WHERE w.status ='closed' AND s.campus='Arts' AND s.staff_id=w.staff_id`;
+    const sql_40=`SELECT count(DISTINCT w.id) AS total_tasks FROM work_request w,staff s WHERE s.campus='Arts' AND s.staff_id=w.staff_id`
     connection.query(sql_2,(err1,result1)=>{
-      connection.query(sql_1,(err2,result2)=>{
+    connection.query(sql_1,(err2,result2)=>{
         connection.query(sql_3,(err3,result3)=>{
-          connection.query(sql_4,(err4,result4)=>{
-            connection.query(sql_5,(err5,result5)=>{
+        connection.query(sql_4,(err4,result4)=>{
+        connection.query(sql_5,(err5,result5)=>{
               connection.query(sql_6,(err6,result6)=>{
                 connection.query(sql_7,(err7,result7)=>{
-                  if(err1 && err2 && err3 && err4){
-                    res.send({message:`Something went wrong with the server...`,success:false});
-                  }
-                  let rate;
-                  let days=0;
-                 if(result1.length>0 && result2.length>0 && result3.length>0 ){
-                   averageComplete=Math.round((result2[0].complete/result1[0].total_tasks)*100);
-                   averageClosed=Math.round((result3[0].closed/result1[0].total_tasks)*100);
-                   averageInprogress=Math.round((result5[0].in_progress/result1[0].total_tasks)*100);
-                   averagePending=Math.round((result6[0].pending/result1[0].total_tasks)*100);
-                   for(let i=0;i<result4.length;i++){
-                         days+=result4[i].Duration;
-                   }
-                   rate=Math.round(days/result4.length);
+                  connection.query(sql_8,(err8,result8)=>{
+                    connection.query(sql_9,(err9,result9)=>{
+                      connection.query(sql_10,(err10,result10)=>{
+                        connection.query(sql_11,(err11,result11)=>{
+                          connection.query(sql_12,(err12,result12)=>{//total
+                            connection.query(sql_13,(err13,result13)=>{
+                              connection.query(sql_14,(err14,result14)=>{
+                                connection.query(sql_15,(err15,result15)=>{
+                                  connection.query(sql_16,(err16,result16)=>{
+                                    connection.query(sql_17,(err17,result17)=>{
+                                    connection.query(sql_18,(err18,result18)=>{ 
+                                    connection.query(sql_19,(err19,result19)=>{ 
+                                    connection.query(sql_20,(err20,result20)=>{ 
+                                    connection.query(sql_21,(err21,result21)=>{ 
+                                    connection.query(sql_22,(err22,result22)=>{ 
+                                    connection.query(sql_23,(err23,result23)=>{  
+                                    connection.query(sql_24,(err24,result24)=>{  
+                                    connection.query(sql_25,(err25,result25)=>{ 
+                                    connection.query(sql_26,(err26,result26)=>{ 
+                                    connection.query(sql_27,(err27,result27)=>{ 
+                                    connection.query(sql_28,(err28,result28)=>{ 
+                                    connection.query(sql_29,(err29,result29)=>{ 
+                                    connection.query(sql_30,(err30,result30)=>{  
+                                    connection.query(sql_31,(err31,result31)=>{  
+                                    connection.query(sql_32,(err32,result32)=>{ 
+                                    connection.query(sql_33,(err33,result33)=>{  
+                                    connection.query(sql_34,(err34,result34)=>{ 
+                                    connection.query(sql_35,(err35,result35)=>{  
+                                    connection.query(sql_36,(err36,result36)=>{    
+                                    connection.query(sql_37,(err37,result37)=>{ 
+                                    connection.query(sql_38,(err38,result38)=>{  
+                                    connection.query(sql_39,(err39,result39)=>{   
+                                    connection.query(sql_40,(err40,result40)=>{         
+                                    if(err1 && err2 && err3 && err4){
+                                      res.send({message:`Something went wrong with the server...`,success:false});
+                                     }
+                                    let rate;
+                                    let days=0;
+                                    if(result1.length>0 && result2.length>0 && result3.length>0 ){
+                                    averageComplete=Math.round((result2[0].complete/result1[0].total_tasks)*100);
+                                     averageClosed=Math.round((result3[0].closed/result1[0].total_tasks)*100);
+                                    averageInprogress=Math.round((result5[0].in_progress/result1[0].total_tasks)*100);
+                                    averagePending=Math.round((result6[0].pending/result1[0].total_tasks)*100);
+                                    averageComplete_soshSouth=Math.round((result10[0].complete/result12[0].total_tasks)*100);
+                                    averageComplete_soshNorth=Math.round((result34[0].complete/result36[0].total_tasks)*100);
+                                    averageComplete_Pretoria=Math.round((result18[0].complete/result20[0].total_tasks)*100);
+                                    averageComplete_Emalahleni=Math.round((result14[0].complete/result16[0].total_tasks)*100);
+                                    averageComplete_Garankuwa=Math.round((result22[0].complete/result24[0].total_tasks)*100);
+                                    averageComplete_Arcadia=Math.round((result26[0].complete/result28[0].total_tasks)*100);
+                                    averageComplete_Arts=Math.round((result38[0].complete/result40[0].total_tasks)*100);
+                                    averageComplete_Polokwane=Math.round((result32[0].complete/result30[0].total_tasks)*100);
+                                    for(let i=0;i<result4.length;i++){
+                                    days+=result4[i].Duration;
+                                    }
+                                    rate=Math.round(days/result4.length);
 
-                   res.send({averageCompleted:averageComplete,/////average percentage of closed logs
-                   averageClosed:averageClosed,///The average percentage of closed logs
-                   LogResolutionRate:rate,//// LogResolutionRate the avverage number of days it takes to resolve a log
-                   averageInProgress:averageInprogress,///The average percentage of inProgress logs
-                   averagePending:averagePending,///////The average percentage of pending logs
-                   totalUnassigned:result7[0].unassigned////Total number of tasks with no assigned artisan
+                                    res.send({averageCompleted:averageComplete,/////average percentage of closed logs
+                                    averageClosed:averageClosed,///The average percentage of closed logs
+                                    LogResolutionRate:rate,//// LogResolutionRate the avverage number of days it takes to resolve a log
+                                    averageInProgress:averageInprogress,///The average percentage of inProgress logs
+                                    averagePending:averagePending,///////The average percentage of pending logs
+                                    averageComplete_soshSouth:averageComplete_soshSouth,
+                                    averageComplete_soshNorth: averageComplete_soshNorth,
+                                    averageComplete_Pretoria:averageComplete_Pretoria,
+                                    averageComplete_Emalahleni:averageComplete_Emalahleni,
+                                    averageComplete_Garankuwa:averageComplete_Garankuwa,
+                                    averageComplete_Arcadia:averageComplete_Arcadia,
+                                    averageComplete_Arts:averageComplete_Arts,
+                                    averageComplete_Polokwane:averageComplete_Polokwane,
+                                    totalUnassigned:result7[0].unassigned,////Total number of tasks with no assigned artisan
+                                    totalActive:result8[0].active,
+                                    SoshanguveSouthActive:result9[0].active,
+                                    SoshanguveNorthActive:result33[0].active,
+                                    eMalahleniActive:result13[0].active,
+                                    PretoriaActive:result17[0].active,
+                                    GarankuwaActive:result21[0].active,
+                                    ArcadiaActive:result25[0].active,
+                                    ArtsActive:result37[0].active,
+                                    PolokwaneActive:result29[0].active,  
+                                    SoshanguveSouthComplete:result10[0].complete,
+                                    SoshanguveNorthComplete:result34[0].complete,
+                                    eMalahleniComplete:result14[0].complete,
+                                    PretoriaComplete:result18[0].complete,
+                                    GarankuwaComplete:result22[0].complete,
+                                    ArcadiaComplete:result26[0].complete,
+                                    PolokwaneComplete:result30[0].complete,
+                                    ArtsComplete:result38[0].complete,
+                                    SoshanguveSouthClosed:result11[0].closed,
+                                    SoshanguveNorththClosed:result35[0].closed,
+                                    GarankuwaComplete:result23[0].closed,
+                                    eMalahleniClosed:result15[0].closed,
+                                    PretoriaClosed:result19[0].closed,
+                                    ArcadiaClosed:result27[0].closed,
+                                    PolokwaneClosed:result31[0].closed,
+                                    ArtsClosed:result39[0].closed
+                                  });
+                                }
+                              }); 
                             });
-                  }
+                          });
+                        })
+                                    });
+                                  });
+                                });
+                                  });
+                                });
+                                  });
+                                   });
+                                    });
+                                     });
+                                    });
+                                    });
+                                    }); 
+                                    });
+                                    });
+                                    });
+                                    });
+                                  });
+                                  });  
+                                  });
+                                  });
+                                 });
+                                });
+                              })
+                            });   
+                          });
+                        });
+                      });
+                    });   
+                 });
                 });  
               });
             });
