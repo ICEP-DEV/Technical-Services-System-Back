@@ -101,9 +101,6 @@ INSERT INTO department(faculty,department,venue)
 VALUES ('Humanities','Department of Safety and security management','17-3');
 
 INSERT INTO department(faculty,department,venue)
-VALUES ('Humanities','Department of Safety and security management','17-3');
-
-INSERT INTO department(faculty,department,venue)
 VALUES ('Humanities','School of Education','17-3');
 
 
@@ -124,7 +121,7 @@ INSERT INTO hod(hod_id,name,surname,email,campus,password,department_id)
 VALUES(225896874,'JC','Janse van Vuuren','tyson@tut.ac.za','Soshanguve South','admin',1);
 
 INSERT INTO hod(hod_id,name,surname,email,campus,password,department_id)
-VALUES(215890874,'RC','Mogase','mogase@tut.ac.za','Soshanguve South','admin',1);
+VALUES(215890874,'RC','Mogase','mogase@tut.ac.za','Soshanguve South','admin',2);
 
 CREATE TABLE staff(
 staff_id BIGINT NOT NULL PRIMARY KEY,
@@ -148,13 +145,25 @@ INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,de
 VALUES (202123345,'Johanna','McAthurthy','mcathurthy4@tut4life.ac.za','0127778360','female','Soshanguve South',1);
 
 INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
-VALUES (212879345,'Thabo','Mokoena','mokoanaThab0@tut4life.ac.za','0129354560','male','Arcadia',9);
+VALUES (212879345,'Thabo','Mokoena','mokoanaThab0@tut4life.ac.za','0129354560','male','Arcadia',15);
 
 INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
 VALUES (202458345,'Dikeledi','Moepi','moepi@tut4life.ac.za','0127878360','female','Ga-rankuwa',5);
 
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
+VALUES (212453459,'Marcia','Smith','marciSmith@tut.ac.za','0127796360','female','Pretoria',5);
 
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
+VALUES (212478259,'Loraine','Sekele','seleke@tut.ac.za','0187799688','female','eMalahleni',5);
 
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
+VALUES (212478003,'Chris','Michael','Michael@tut.ac.za','0187797825','male','eMalahleni',5);
+
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
+VALUES (212478113,'Mpho','Tau','Mpho4@tut.ac.za','0184589336','male','Polokwane',5);
+
+INSERT INTO staff(staff_id,staff_name,staff_surname,email,phone,gender,campus,department_id)
+VALUES (212478123,'Clarence','Sekoma','Sekoma@tut.ac.za','0124584736','male','Acardia',18);
 
   CREATE TABLE administrator(
 admin_id BIGINT PRIMARY KEY NOT NULL,
@@ -190,6 +199,9 @@ VALUES('Network','14-g13');
 INSERT INTO division(division_name,division_location)
 VALUES('Electrical','5-12');
 
+INSERT INTO division(division_name,division_location)
+VALUES('Glass','5-121');
+
 CREATE TABLE technician(
   tech_id BIGINT NOT NULL PRIMARY KEY,
   name VARCHAR(45),
@@ -205,10 +217,56 @@ CREATE TABLE technician(
 );
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
-VALUES(25897486,'John','Black','0124578987','john@tut.ac.za','male','available',1,'soshanguve south','john%Bl@ck');
+VALUES(25897486,'John','Black','0124578987','john@tut.ac.za','male','available',1,'Soshanguve South','john%Bl@ck');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
-VALUES(25999486,'Sam','Modise','01245745981','sammodise@tut.ac.za','male','available',2,'soshanguve south','s@mModI~3');
+VALUES(25999486,'Sam','Modise','0124574581','sammodise@tut.ac.za','male','available',2,'Soshanguve South','s@mModI~3');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25997850,'Tebogo','Zwane','0124345666','tebogoZwane@tut.ac.za','male','available',5,'Soshanguve South','tebogo');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25997936,'Xolile','Dube','0128745963','xoliDube@tut.ac.za','male','available',5,'Acardia','1xoli');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25997859,'Sifiso','Khumalo','0124347852','Skhumalo@tut.ac.za','female','available',2,'Soshanguve South','sifis0');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25997958,'Matthews','Kehla','0124378152','MatKelha@tut.ac.za','male','available',6,'Soshanguve South','k123');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25998851,'Mpho','Mashaba','012437752','Mpho234@tut.ac.za','male','available',5,'eMalahleni','mpho1');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(21990052,'Lesego','Radebe','012434496','MLes2@tut.ac.za','male','available',1,'eMalahleni','les1');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(21894865,'Leon','Railey','012437891','raileyL@tut.ac.za','male','available',5,'Pretoria','1234');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(21914818,'Thabani','Zulu','012637776','zuluNdabezitha@tut.ac.za','male','available',1,'Pretoria','thabani');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(21915811,'Dumisani','Mahlangu','012637776','dubs@tut.ac.za','male','available',2,'Acardia','dumi23');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(21918965,'Katlego','Maboe','012438576','lats@tut.ac.za','male','available',2,'Acardia','katzxe');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(21518934,'Khumo','Seadimo','012438895','khumo34@tut.ac.za','male','available',2,'Polokwane','khum0');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(21911168,'Katlego','Maboe','012438576','lats@tut.ac.za','male','available',2,'Acardia','katzxe');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(21911060,'Samkelo','Zungu','012437876','sam@tut.ac.za','male','available',2,'Polokwane','katzxe');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(21611061,'Sbusiso','Zwane','012437845','ssbu@tut.ac.za','male','available',5,'Polokwane','sbu');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(21711162,'Lebogang','Zwane','012437845','ssbu@tut.ac.za','male','available',5,'Polokwane','sbu');
+
 
 
 CREATE TABLE work_request(
@@ -238,18 +296,25 @@ INSERT INTO work_request(id,description,req_date,category,priority,venue,image,p
 VALUES(1678884550556,'Leaking taps','2023-03-20','Plumbing','High','10-g28','','in-progress','active',202233345,25897486,222424345);
 
 INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,admin_id,tech_id,staff_id)
-VALUES(1678784590556,'Blue screen','2023-03-06','Hardware','High','10-112','','complete','the issue is sorted','done with task',4,'closed',202233345,25999486,212879345);
+VALUES(1678784590556,'Blue screen','2023-03-06','Hardware','High','10-112','','complete','the issue is sorted','done with task',4,'active',202233345,25999486,212879345);
 
 INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,admin_id,tech_id,staff_id)
 VALUES(1678684550957,'PC not switching on','2023-03-15','Hardware','High','10-102','','complete','sorted','hardware components changed',3,'closed',202233345,25999486,222466645);
 
+INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id)
+VALUES(1678584897459,'No hot water','2023-04-20','Electrical','High','11-62','','complete','sorted','thermostat replaced',3,'closed','2023-04-23','2023-04-23 ',202233345,25997936,222466645);
 
+INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id)
+VALUES(1678584235896,'Flickering lights','2023-04-10','Electrical','High','4-112','','complete','sorted','lights changed',3,'closed','2023-04-14','2023-04-13 ',202233345,25997936,222466645);
 
+INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id)
+VALUES(1678584330959,'Blocked toilets','2023-03-15','Plumbing','High','10-112','','complete','sorted','pipes changed',3,'closed','2023-03-19','2023-03-19 ',202233345,25897486,222466645);
 
+INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,assigned_date,admin_id,tech_id,staff_id)
+VALUES(1678884550556,'Burst water pipe','2023-03-23','Plumbing','High','10-1','','on-hold','sorted','pipes ordered',3,'active','2023-03-29 ',202233345,25897486,212478113);
 
+INSERT INTO work_request(id,description,req_date,category,venue,image,progress,staff_feedback,tech_feedback,status,staff_id)
+VALUES(1678884557896,'Shattered windows','2023-03-25','Glass','10-1','','pending','','','active',212478113);
 
-
-
-
-
-
+INSERT INTO work_request(id,description,req_date,category,venue,image,progress,staff_feedback,tech_feedback,status,staff_id)
+VALUES(1674584557236,'Lights not going on','2023-04-25','Electrical','10-1','','pending','','','active',212478259);

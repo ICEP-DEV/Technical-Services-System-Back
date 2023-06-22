@@ -6,7 +6,7 @@ module.exports = app => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                     TECHNICIAN VIEWS TASKS ASSIGNED THEM                                                    */  
   app.get('/technician/tasks/:tech_id',(req,res)=>{
-    const sql=`SELECT w.category,w.description, w.priority, w.venue,w.progress 
+    const sql=`SELECT w.id,w.category,w.description, w.priority, w.venue,w.progress 
               FROM work_request w,technician t 
               WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}';`
     connection.query(sql,(err,result)=>{
@@ -19,13 +19,19 @@ module.exports = app => {
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**                                     TECHNICIAN UPDATE THEIR PROGRESS OF TASK                                                 */
-  app.post('/technician/updateTask/:id',(req,res)=>{
+  app.put('/technician/updateTask/:id',(req,res)=>{
     let progress=req.body.progress;
-    const sql=`UPDATE work_request SET progress=? 
+    let sql;
+    if(progress=='complete'){
+      sql=`UPDATE work_request SET progress=?,completed_date='${ new Date().toJSON().slice(0, 10)}' 
+      WHERE id='${req.params.id}' `
+    }else{
+      sql=`UPDATE work_request SET progress=? 
               WHERE id='${req.params.id}' `;
+     }
     connection.query(sql,progress,(err,result)=>{
       if(err){
-          res.send({message:"An error occured",succes:false});
+          res.send({message:"An error occured",success:false});
       }
       res.send({message:"Progress updated!",success:true
     });
@@ -34,7 +40,6 @@ module.exports = app => {
      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**                                     TECHNICIAN LOG-IN AUTHENTICATION                                                */
    app.post('/technician/login',(req,res)=>{
-    let tech_email=req.body.technician_email;
     let tech_id=req.body.tech_id;
     let password=req.body.password;
     const sql=`SELECT * 
@@ -60,7 +65,7 @@ module.exports = app => {
       }else
       {
         res.send({
-          message:"Incorrect Details!",
+          message:"Please enter correct ID!",
           success:false
         });
       }
