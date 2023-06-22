@@ -39,7 +39,10 @@ module.exports = app => {
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /**VIEW ALL REQUESTS IN SYSTEM */
   app.get("/admin/requests", (req, res) => {
-    sql=`SELECT * FROM work_request ORDER BY req_date DESC`;
+    sql=`SELECT id, description, DATE_FORMAT(req_date, '%Y/%M/%d') as req_date, category,priority,venue,progress,staff_feedback,tech_feedback,
+    rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id 
+    FROM work_request 
+    ORDER BY req_date DESC`;
     connection.query(sql, (err, result) => {
       if(err)
       {
@@ -71,9 +74,14 @@ module.exports = app => {
     })
   });
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                            /*VIEWS ALL ACTIVE REQUESTS*/
+                                            /*VIEWS ALL ACTIVE AND UNASSIGNED REQUESTS*/
   app.get('/admin/viewAll',(req,res)=>{
-    const sql=`SELECT * FROM work_request WHERE status='active' ORDER BY req_date DESC`;
+    const sql=`SELECT  id, description, DATE_FORMAT(req_date, '%Y/%M/%d') as req_date, category,priority,venue,progress,staff_feedback,tech_feedback,
+              rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id  
+    FROM work_request 
+    WHERE status='active' 
+    AND tech_id IS NULL
+    ORDER BY req_date DESC`;
     connection.query(sql,(err,result)=>{
       if(err){
         res.send({message:`An error ocurred`});
@@ -717,7 +725,8 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
                                     PretoriaClosed:result19[0].closed,
                                     ArcadiaClosed:result27[0].closed,
                                     PolokwaneClosed:result31[0].closed,
-                                    ArtsClosed:result39[0].closed
+                                    ArtsClosed:result39[0].closed,
+                                    Pending:result6[0].pending
                                   });
                                 }
                               }); 
