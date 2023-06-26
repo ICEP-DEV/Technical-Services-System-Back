@@ -40,9 +40,9 @@ module.exports = app => {
                                                      /**VIEW ALL REQUESTS IN SYSTEM */
   app.get("/admin/requests", (req, res) => {
     sql=`SELECT id, description, DATE_FORMAT(req_date, '%Y/%M/%d') as req_date, category,priority,venue,progress,staff_feedback,tech_feedback,
-    rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id 
-    FROM work_request 
-    ORDER BY req_date DESC`;
+                rating,status,DATE_FORMAT(completed_date, '%Y/%M/%d') as completed_date,DATE_FORMAT(assigned_date, '%Y/%M/%d') AS assigned_date,admin_id,tech_id,staff_id 
+        FROM work_request 
+        ORDER BY req_date DESC`;
     connection.query(sql, (err, result) => {
       if(err)
       {
@@ -77,7 +77,7 @@ module.exports = app => {
                                             /*VIEWS ALL ACTIVE AND UNASSIGNED REQUESTS*/
   app.get('/admin/viewAll',(req,res)=>{
     const sql=`SELECT  id, description, DATE_FORMAT(req_date, '%Y/%M/%d') as req_date, category,priority,venue,progress,staff_feedback,tech_feedback,
-              rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id  
+              rating,status,DATE_FORMAT(completed_date, '%Y/%M/%d') as completed_date,DATE_FORMAT(assigned_date, '%Y/%M/%d') AS assigned_date,admin_id,tech_id,staff_id  
     FROM work_request 
     WHERE status='active' 
     AND tech_id IS NULL
@@ -97,8 +97,12 @@ module.exports = app => {
 
 app.put("/admin/setPriority/:id",(req,res)=>{
   let priority=req.body.priority;
-  const sql=`UPDATE work_request SET priority=?, progress='acknowlegded' WHERE id='${req.params.id}'`;
-  connection.query(sql,priority,(err,result)=>{
+  let expected_time=req.body.expected_time;
+  let expected_date=req.body.expected_date;
+  const sql=`UPDATE work_request 
+            SET priority=?, progress='acknowlegded',expected_time=? 
+            WHERE id='${req.params.id}'`;
+  connection.query(sql,priority,expected_time,expected_date,(err,result)=>{
     if(err){
       res.send({message:`An error occured`});
   }
@@ -127,11 +131,13 @@ app.get("/admin/viewRequest/:id",(req,res)=>{
 /*                                                       VIEW AVAILABLE TECHNICIANS*/
 app.get('/admin/availableTechnician/:id',(req,res)=>{
   const sql=`SELECT t.tech_id,t.name,t.surname,t.phone,t.email
-             FROM technician t,division d,work_request w 
-             WHERE availability='available'
-             AND d.id=t.division_id
-             AND w.category = d.division_name
-             AND w.id= ${req.params.id}`;
+            FROM technician t,division d,work_request w,staff s 
+            WHERE availability='available'
+            AND d.id=t.division_id
+            AND w.category = d.division_name
+            AND w.id= '${req.params.id}'
+            AND s.staff_id=w.staff_id
+            AND t.campus =s.campus`;
   connection.query(sql,(err,result)=>{
     if(err){
       res.send({message:"could not fetch data",
@@ -455,7 +461,7 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
                                           /*EXPORT ALL REQUEST TO EXCEL*/
   app.get('/admin/export',(req,res)=>{
     const sql=`SELECT w.id  AS Reference_Number,
-                      w.req_date AS Request_Date,
+                      DATE_FORMAT(w.req_date, '%Y/%M/%d'),
                       w.category AS Category,
                       s.campus AS Campus,
                       d.department AS Department,
@@ -484,7 +490,7 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
    *                                        EXPORT CLOSED LOGS                                                       */
   app.get('/admin/export-closed',(req,res)=>{  
     const sql=`SELECT w.id  AS Reference_Number,
-              w.req_date AS Request_Date,
+              DATE_FORMAT(w.req_date, '%Y/%M/%d'),
               w.category AS Category,
               s.campus AS Campus,
               d.department AS Department,
@@ -565,7 +571,7 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
     const sql=`SELECT w.id,
                           s.staff_name,
                           s.staff_surname,
-                          w.req_date,
+                          DATE_FORMAT(w.req_date, '%Y/%M/%d'),
                           w.category,
                           w.status,
                           w.progress
@@ -770,5 +776,40 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
        }); 
     });
   })
-  
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**                                                                                                                                            */
+  app.get('/aggregate',(req,res)=>{
+    const sql=`Select category,count(id ) AS total
+                FROM work_request
+                WHERE status='active'
+                GROUP BY category`;
+    connection.query(sql,(err,result)=>{
+      if(err){
+        res.send('Something went wrong with server')
+      }else{
+        res.send({result,success:true});
+      }
+    });                    
+  });
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  app.get('/get-category/:category',(req,res)=>{
+    const sql=`SELECT description,category,req_date,status,progress
+               FROM work_request
+               WHERE status='active'
+              AND category='${req.params.category}'`;
+    connection.query(sql,(err,result)=>{
+      if(err){
+        res.send('Something went wrong with server')
+      }else{
+        res.send({result,success:true});
+      }
+    });  
+  });
+  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  app.get('/get-delayed',(req,res)=>{
+    const sql=`SELECT w.id,w.description,w.req_date,w.progress
+              FROM w.request,s.staff
+              WHERE w.staff_id=s.staff_id
+              AND DATEDIFF(CURDATE(),w.assigned_date) <= DATEDIFF()`
+  });
 };
