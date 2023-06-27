@@ -178,44 +178,223 @@ password VARCHAR(45));
 INSERT INTO administrator(admin_id,admin_name,admin_surname,gender,email,phone,campus,password)
 VALUE(202233345,'Mike','Jones','male','mkike234@gmail.com','0124578987','Soshanguve South','#creQiZ@');
 
+
+
 CREATE TABLE division(
  id INT AUTO_INCREMENT PRIMARY KEY NOT NULL,
- division_name VARCHAR(45),
- division_location VARCHAR(45)
+ division_name VARCHAR(45)
 );
 
-INSERT INTO division(division_name,division_location)
-VALUES('Plumbing','18-g07');
+INSERT INTO division(division_name)/*1*/
+VALUES('Plumbing');
 
-INSERT INTO division(division_name,division_location)
-VALUES('Hardware','20-g45');
+INSERT INTO division(division_name)/*2*/
+VALUES('Painting');
 
-INSERT INTO division(division_name,division_location)
-VALUES('Carpentry','20-g45');
+INSERT INTO division(division_name)/*3*/
+VALUES('Carpentry');
 
-INSERT INTO division(division_name,division_location)
-VALUES('Network','14-g13');
+INSERT INTO division(division_name)/*4*/
+VALUES('Air Conditioning');
 
-INSERT INTO division(division_name,division_location)
-VALUES('Electrical','5-12');
+INSERT INTO division(division_name)/*5*/
+VALUES('Electrical');
 
-INSERT INTO division(division_name,division_location)
-VALUES('Glass','5-121');
+INSERT INTO division(division_name)/*6*/
+VALUES('General (Water Proofing, Blinds & Glass)');
 
-INSERT INTO division(division_name,division_location)
-VALUES('Engraving','5-100');
+INSERT INTO division(division_name)/*7*/
+VALUES('Engraving');
 
-INSERT INTO division(division_name,division_location)
-VALUES('Roofing','5-121');
+INSERT INTO division(division_name)/*8*/
+VALUES('Buidling');
 
-INSERT INTO division(division_name,division_location)
-VALUES('Garden','21');
+INSERT INTO division(division_name)/*9*/
+VALUES('Lifts');
 
-INSERT INTO division(division_name,division_location)
-VALUES('Audio','16-21');
+INSERT INTO division(division_name)
+VALUES('Metalwork (Welding & Fitting)');/*10*/
 
-INSERT INTO division(division_name,division_location)
-VALUES('Welding & Steel','19-21');
+CREATE TABLE item(
+  item_id INT AUTO_INCREMENT PRIMARY KEY NOT NUll,
+  item_name VARCHAR(45),
+  division_id INT,
+  FOREIGN KEY (division_id) REFERENCES division(id)
+);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Wood Doors',3);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Burglar Door',10);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Ligh Bulb',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Geyser',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Printers',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Projectors',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Wood Shelves',3);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Hardwood Tables',3);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Earth Leakage',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('IT related',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Window frames',8);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Paving',8);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Flooring',8);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Window Glass',6);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Gates',10);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Frequent burning out of light bulbs',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Electric shocks',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Less outlets',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Tripping circuit breaker',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Flickering light',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Switches of light not working',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('A junction box that is uncovered',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Power sags and dips',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Overloading',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Electrical surges',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES(' Frequent burning out of light bulbs',5);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Fading',2);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Water Marks',2);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Cracked Wall',8);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Unstable Pillars',8);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Unstable Walkway, Ramp & Bridge',8);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Exterior walls bulging or leaning',8);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Sagging roof and roof leaks',8);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Foundation problems',8);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Powdery or chalky surfaces on outside paint work',2);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Shrivelling and wrinkling',2);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Blistering and flaking',2);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Power failure',9);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Overheating',9);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Stuck doors',9);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Cracked panels',9);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Smoke or fire',9);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Safety gaps',9);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Stuck elavator',9);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Corroding metal furniture',10);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Rusty metal furniture',10);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Cracked window',6);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Air conditioning leaking water',4);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Air conditioning not blowing hot air',4);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Air conditioning not blowing cold air',4);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Air conditioning making noises',4);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Air conditioning power issue',4);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Dripping faucets',1);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Leaky pipes',1);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Running toilets',1);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Low water pressure',1);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Slow or clogged drains',1);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Sewer system backup',1);
 
 CREATE TABLE technician(
   tech_id BIGINT NOT NULL PRIMARY KEY,
@@ -324,6 +503,7 @@ CREATE TABLE work_request(
  expected_date date,
  completion_time VARCHAR(5),
  expected_time VARCHAR(5),
+ closed_date VARCHAR(45),
  admin_id BIGINT,
  tech_id BIGINT,
  staff_id BIGINT,
