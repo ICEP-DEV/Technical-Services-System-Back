@@ -78,10 +78,10 @@ module.exports = app => {
   app.get('/admin/viewAll',(req,res)=>{
     const sql=`SELECT  id, description, DATE_FORMAT(req_date, '%Y/%M/%d') as req_date, category,priority,venue,progress,staff_feedback,tech_feedback,
               rating,status,DATE_FORMAT(completed_date, '%Y/%M/%d') as completed_date,DATE_FORMAT(assigned_date, '%Y/%M/%d') AS assigned_date,admin_id,tech_id,staff_id  
-    FROM work_request 
-    WHERE status='active' 
-    AND tech_id IS NULL
-    ORDER BY req_date DESC`;
+              FROM work_request 
+              WHERE status='active' 
+              AND tech_id IS NULL
+              ORDER BY req_date DESC`;
     connection.query(sql,(err,result)=>{
       if(err){
         res.send({message:`An error ocurred`});
@@ -95,22 +95,52 @@ module.exports = app => {
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                         ////THE ADIM SETS THE PRIORITY OF THE REQUEST
 
-app.put("/admin/setPriority/:id",(req,res)=>{
-  let priority=req.body.priority;
-  let expected_time=req.body.expected_time;
-  let expected_date=req.body.expected_date;
-  const sql=`UPDATE work_request 
-            SET priority=?, progress='acknowlegded',expected_time=? 
+
+ /////PART 1
+  /*GETS THE DATE THAT THE TECHNICIAN EXPECTED TO FINISH*/                                                      
+app.get('/admin/getExpectedDate/:id',(req,res)=>{
+  let num_days;
+  let priority=req.body.priority;//priority
+ 
+   if(priority =='Low'){
+      num_days=4;
+   }else if(priority=='Medium'){
+      num_days=2;
+   }else{
+       num_days=1;  
+   }
+  const sql_1=`SELECT DATE_ADD(req_date, INTERVAL '${num_days}' DAY) AS expected_date FROM work_request WHERE id=${req.params.id}`;
+
+  connection.query(sql_1,(err,result1)=>{
+      if(err){
+          res.send({message:"Something went wrong with the server"})
+      }else{
+          res.send({expectedDate:result1[0].expected_date});
+      }
+  });
+});
+
+       /**SETS THE PRIORITY OF THE TASK BY PASSING THE EXPECTED TO THE ROUTE */                                                 
+
+app.put('/admin/setPriority/:id',(req,res)=>{
+  let data ={
+    priority:req.body.priority,
+    expected_date:req.body.expected_date
+  };
+    const sql_2=`UPDATE work_request 
+            SET  ?
             WHERE id='${req.params.id}'`;
-  connection.query(sql,priority,expected_time,expected_date,(err,result)=>{
-    if(err){
+         
+    connection.query(sql_2,data,(err2,result2)=>{
+     if(err2){
       res.send({message:`An error occured`});
-  }
-  else{
-  res.send({message:'Priority of task set!'}); 
-  }
-  })
-})
+      console.log(err2);
+      }
+      else{
+      res.send({message:'Priority of task set!'}); 
+        }
+      });    
+});
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                           ////VIEWING A SPECIFIC REQUEST
 app.get("/admin/viewRequest/:id",(req,res)=>{
