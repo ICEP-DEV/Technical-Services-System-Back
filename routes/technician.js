@@ -6,9 +6,10 @@ module.exports = app => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                     TECHNICIAN VIEWS TASKS ASSIGNED THEM                                                    */  
   app.get('/technician/tasks/:tech_id',(req,res)=>{
-    const sql=`SELECT w.id,w.category,w.description, w.priority, w.venue,w.progress,w.expected_date,w.expected_time
+    const sql=`SELECT w.id,w.category,w.description, w.priority, w.venue,w.progress,w.expected_date,
               FROM work_request w,technician t 
-              WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}';`
+              WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}
+              AND w.status='active';`
     connection.query(sql,(err,result)=>{
       if(err){
         res.send({message:"An error occured",success:false});
