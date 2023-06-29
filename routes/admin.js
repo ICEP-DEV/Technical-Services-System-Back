@@ -167,7 +167,7 @@ app.get('/admin/availableTechnician/:id',(req,res)=>{
             AND w.category = d.division_name
             AND w.id= '${req.params.id}'
             AND s.staff_id=w.staff_id
-            AND t.campus =s.campus`;
+            `;
   connection.query(sql,(err,result)=>{
     if(err){
       res.send({message:"could not fetch data",

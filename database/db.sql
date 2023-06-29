@@ -238,13 +238,13 @@ INSERT INTO item(item_name,division_id)
 VALUES('Printers',5);
 
 INSERT INTO item(item_name,division_id)
-VALUES('Projectors',5);
+VALUES('Projector problem',5);
 
 INSERT INTO item(item_name,division_id)
 VALUES('Wood Shelves',3);
 
 INSERT INTO item(item_name,division_id)
-VALUES('Hardwood Tables',3);
+VALUES('Hardwood table issues',3);
 
 INSERT INTO item(item_name,division_id)
 VALUES('Earth Leakage',5);
@@ -256,16 +256,16 @@ INSERT INTO item(item_name,division_id)
 VALUES('Window frames',8);
 
 INSERT INTO item(item_name,division_id)
-VALUES('Paving',8);
+VALUES('Paving issues',8);
 
 INSERT INTO item(item_name,division_id)
-VALUES('Flooring',8);
+VALUES('Flooring issues',8);
 
 INSERT INTO item(item_name,division_id)
-VALUES('Window Glass',6);
+VALUES('Broken Window Glass',6);
 
 INSERT INTO item(item_name,division_id)
-VALUES('Gates',10);
+VALUES('Broken gate',10);
 
 INSERT INTO item(item_name,division_id)
 VALUES('Frequent burning out of light bulbs',5);
@@ -395,6 +395,28 @@ VALUES('Slow or clogged drains',1);
 
 INSERT INTO item(item_name,division_id)
 VALUES('Sewer system backup',1);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Request for etching',7);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Request for inside ring engraving',7);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Request for laser engraving',7);
+
+INSERT INTO item(item_name,division_id)
+VALUES('The lock is broken',10);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Key broken in lock',10);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Door will not close',10);
+
+INSERT INTO item(item_name,division_id)
+VALUES('Back up generator did not commence ',5);
+
 
 CREATE TABLE technician(
   tech_id BIGINT NOT NULL PRIMARY KEY,

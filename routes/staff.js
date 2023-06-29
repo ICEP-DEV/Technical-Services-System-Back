@@ -23,6 +23,7 @@ app.post("/staff/createRequest", (req, res) => {
     progress:'pending',
     status:'active',
     staff_id:req.body.staff_id};
+    console.log(data);
   const sql = `INSERT INTO work_request SET ?`;
   connection.query(sql,data, (err,result)=> {
      if(err){
@@ -30,6 +31,7 @@ app.post("/staff/createRequest", (req, res) => {
       message:'Something went wrong...',
       success:"false"
      })
+     console.log(err)
       }
       else
       {
