@@ -23,6 +23,7 @@ app.post("/staff/createRequest", (req, res) => {
     progress:'pending',
     status:'active',
     staff_id:req.body.staff_id};
+    console.log(data);
   const sql = `INSERT INTO work_request SET ?`;
   connection.query(sql,data, (err,result)=> {
      if(err){
@@ -30,6 +31,7 @@ app.post("/staff/createRequest", (req, res) => {
       message:'Something went wrong...',
       success:"false"
      })
+     console.log(err)
       }
       else
       {
@@ -139,10 +141,36 @@ app.post('/staff/getDuplicates',(req,res)=>{
            AND venue LIKE '%${venue}%'); `
   connection.query(sql,(err,result)=>{
     if(err){
-        res.send({message:`an error occured!`})
+        res.send({message:`an error occured!`});
     }if(result.length>0){
-        res.send(result)
+        res.send(result);
     }
-  })
-})
+  });
+});
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**                                               CATEGORY DROP DOWN OPTIONS */
+app.get('/getCategory',(req,res)=>{
+  const sql=`SELECT id,division_name FROM division`
+  connection.query(sql,(err,result)=>{
+    if(err){
+        res.send({message:'Something with went wrong with server'});
+    }else{
+        res.send(result);
+    }
+  });
+});
+/**                                               ITEMS (description) DROP DOWN OPTIONS */
+app.get('/getItem/:id',(req,res)=>{
+  const sql=`SELECT item_name
+              FROM item
+              WHERE division_id=${req.params.id}`
+  connection.query(sql,(err,result)=>{
+    if(err){
+        res.send({message:'Something with went wrong with server'});
+    }else{
+        res.send(result);
+    }
+  });
+});
+
 };

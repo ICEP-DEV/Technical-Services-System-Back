@@ -6,9 +6,9 @@ module.exports = app => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                     TECHNICIAN VIEWS TASKS ASSIGNED THEM                                                    */  
   app.get('/technician/tasks/:tech_id',(req,res)=>{
-    const sql=`SELECT w.id,w.category,w.description, w.priority, w.venue,w.progress 
+    const sql=`SELECT w.id,w.category,w.description, w.priority, w.venue,w.progress
               FROM work_request w,technician t 
-              WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}';`
+              WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}'`
     connection.query(sql,(err,result)=>{
       if(err){
         res.send({message:"An error occured",success:false});
@@ -42,6 +42,7 @@ module.exports = app => {
    app.post('/technician/login',(req,res)=>{
     let tech_id=req.body.tech_id;
     let password=req.body.password;
+    console.log(req.body)
     const sql=`SELECT * 
               FROM technician 
               WHERE tech_id="${tech_id}"`;

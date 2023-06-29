@@ -27,7 +27,7 @@ module.exports=app=>{
     });  
    })             
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-// *                                  HOD LOGIN                                                                 */
+// *                                              HOD LOGIN                                                                 */
 app.post('/hod/login',(req,res)=>{
   let hod_id=req.body.hod_id;
   let password=req.body.password;
