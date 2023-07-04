@@ -537,26 +537,5 @@ CREATE TABLE work_request(
 INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,status,admin_id,tech_id,staff_id)
 VALUES(1678884550556,'Leaking taps','2023-03-20','Plumbing','High','10-g28','','in-progress','active',202233345,25897486,222424345);
 
-INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,admin_id,tech_id,staff_id)
-VALUES(1678784590556,'Blue screen','2023-03-06','Hardware','High','10-112','','complete','the issue is sorted','done with task',4,'active',202233345,25999486,212879345);
-
-INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,admin_id,tech_id,staff_id)
-VALUES(1678684550957,'PC not switching on','2023-03-15','Hardware','High','10-102','','complete','sorted','hardware components changed',3,'closed',202233345,25999486,222466645);
-
-INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id)
-VALUES(1678584897459,'No hot water','2023-04-20','Electrical','High','11-62','','complete','sorted','thermostat replaced',3,'closed','2023-04-23','2023-04-23 ',202233345,25997936,222466645);
-
-INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id)
-VALUES(1678584235896,'Flickering lights','2023-04-10','Electrical','High','4-112','','complete','sorted','lights changed',3,'closed','2023-04-14','2023-04-13 ',202233345,25997936,222466645);
-
-INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,completed_date,assigned_date,admin_id,tech_id,staff_id)
-VALUES(1678584330959,'Blocked toilets','2023-03-15','Plumbing','High','10-112','','complete','sorted','pipes changed',3,'closed','2023-03-19','2023-03-19 ',202233345,25897486,222466645);
-
-INSERT INTO work_request(id,description,req_date,category,priority,venue,image,progress,staff_feedback,tech_feedback,rating,status,assigned_date,admin_id,tech_id,staff_id)
-VALUES(1678884550551,'Burst water pipe','2023-03-23','Plumbing','High','10-1','','on-hold','sorted','pipes ordered',3,'active','2023-03-29 ',202233345,25897486,212478113);
-
-INSERT INTO work_request(id,description,req_date,category,venue,image,progress,staff_feedback,tech_feedback,status,staff_id)
-VALUES(1678884557896,'Shattered windows','2023-03-25','Glass','10-1','','pending','','','active',212478113);
-
 INSERT INTO work_request(id,description,req_date,category,venue,image,progress,staff_feedback,tech_feedback,status,staff_id)
 VALUES(1674584557236,'Lights not going on','2023-04-25','Electrical','10-1','','pending','','','active',212478259);

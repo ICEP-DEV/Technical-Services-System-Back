@@ -15,27 +15,6 @@ module.exports = app => {
     console.log('Connected to MySQL server.');
   });
  
-  ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                                        ///VIEW ALL REQUESTS
-  app.get("/admin/viewAllrequest/:staff_id", (req, res) => {
-    sql=`SELECT w.id, w.description,w.category,w.req_date, s.staff_name,s.campus,w.image,w.progress 
-         FROM work_request w,staff s 
-         WHERE s.staff_id=w.staff_id
-         AND w.status='active'
-         AND w.staff_id=${req.params.staff_id}`;
-    connection.query(sql, (err, result) => {
-      if(err)
-      {
-         res.send({message:`An error occured`});
-      }
-      if(result.length>0)
-      {
-          res.send({
-              result
-          });
-      }
-    });
-  });
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /**VIEW ALL REQUESTS IN SYSTEM */
   app.get("/admin/requests", (req, res) => {
@@ -56,23 +35,7 @@ module.exports = app => {
       }
     });
   });
-  //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                              /*DISPLAYS THOSE THAT THAVE HAVE LOGGED A REQUEST*/
-  app.get("/admin/viewRequester",(req,res)=>{
-    sql=`SELECT DISTINCT s.staff_name,s.staff_surname,s.email,d.faculty,d.department,s.campus,s.staff_id
-    FROM work_request w,staff s,department d 
-    WHERE s.staff_id=w.staff_id
-    AND s.department_id=d.department_id`;
-    connection.query(sql,(err,result)=>{
-      if(err){
-        res.send({message:`An error ocurred`});
-      }else{
-        res.send({
-          result
-      });
-      }
-    })
-  });
+
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                             /*VIEWS ALL ACTIVE AND UNASSIGNED REQUESTS*/
   app.get('/admin/viewAll',(req,res)=>{
@@ -441,23 +404,7 @@ app.put('/admin/log-activate/:id',(req,res)=>{
       }
     });          
 });
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*                                               *SEARCH BY CAMPUS*/
-app.get('/admin/getCampusRequests',(req,res)=>{
-  let campus=req.body.campus;
-  const sql=`SELECT * 
-            FROM work_request w, staff s
-            WHERE s.staff_id=w.staff_id
-            AND campus=${campus}`
-  connection.query(sql,(err,result)=>{
-    if(err){
-      res.send({message:"An error occured!"})
-    }else
-    {
-      res.send(result);
-    }
-  });          
-});
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                   /*VIEW ALL CLOSED LOGS */
 app.get('/admin/getClosedLogs',(req,res)=>{
@@ -629,6 +576,7 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
     const sql_6=`SELECT count(id) AS pending FROM work_request WHERE progress = 'pending'`;
     const sql_7=`SELECT count(id) AS unassigned FROM work_request WHERE tech_id IS NULL`;
     const sql_8=`SELECT count(id) AS active FROM work_request WHERE status = 'active'`;
+    const sql_9=`SELECT count(id) AS on_hold FROM work_request WHERE progress = 'on-hold'  `
     
     connection.query(sql_2,(err1,result1)=>{
     connection.query(sql_1,(err2,result2)=>{
@@ -637,7 +585,8 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
     connection.query(sql_5,(err5,result5)=>{
     connection.query(sql_6,(err6,result6)=>{
     connection.query(sql_7,(err7,result7)=>{
-    connection.query(sql_8,(err8,result8)=>{        
+    connection.query(sql_8,(err8,result8)=>{  
+    connection.query(sql_9,(err9,result9)=>{         
                                     if(err1 && err2 && err3 && err4){
                                       res.send({message:`Something went wrong with the server...`,success:false});
                                      }
@@ -648,7 +597,7 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
                                     averageClosed=Math.round((result3[0].closed/result1[0].total_tasks)*100);
                                     averageInprogress=Math.round((result5[0].in_progress/result1[0].total_tasks)*100);
                                     averagePending=Math.round((result6[0].pending/result1[0].total_tasks)*100);
-                            
+                                    averageOnhold=Math.round((result9[0].on_hold/result1[0].total_tasks)*100);
                                     for(let i=0;i<result4.length;i++){
                                     days+=result4[i].Duration;
                                     }
@@ -659,24 +608,27 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
                                     LogResolutionRate:rate,//// LogResolutionRate the avverage number of days it takes to resolve a log
                                     averageInProgress:averageInprogress,///The average percentage of inProgress logs
                                     averagePending:averagePending,///////The average percentage of pending log
+                                    averageOnhold:averageOnhold,///Avarages of on_hold requests
                                     totalUnassigned:result7[0].unassigned,////Total number of tasks with no assigned artisan
                                     active:result8[0].active,
-                                    pending:result6[0].pending
+                                    pending:result6[0].pending,
+                                    on_hold:result9[0].on_hold,
+                                    in_progress:result9[0].in_progress
                                   });
                                 }
                               }); 
                             });
                           });
-                        })
                         });
-                      });       });
-                                });
-                                  });
+                      });
+        });       });
+               });
+    });  });
                                 
                                   
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                                                                                                                            */
-  app.get('/aggregate',(req,res)=>{
+  app.get('/admin/aggregate',(req,res)=>{
     const sql=`Select category,count(id ) AS total
                 FROM work_request
                 WHERE status='active'

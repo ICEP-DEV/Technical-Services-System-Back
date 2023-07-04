@@ -6,9 +6,18 @@ module.exports = app => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                     TECHNICIAN VIEWS TASKS ASSIGNED THEM                                                    */  
   app.get('/technician/tasks/:tech_id',(req,res)=>{
-    const sql=`SELECT w.id,w.category,w.description, w.priority, w.venue,w.progress
+    const sql=`SELECT w.id,
+                      w.category,
+                      DATE_FORMAT(w.req_date, '%Y/%M/%d') AS req_date,
+                      w.description,
+                      w.priority,
+                      w.venue,
+                      w.progress,
+                      DATE_FORMAT(w.expected_date, '%Y/%M/%d') AS expected_date,
+                      DATEDIFF(w.expected_date,CURDATE()) AS elasped_time
               FROM work_request w,technician t 
-              WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}'`
+              WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}'
+              AND w.status='active'`
     connection.query(sql,(err,result)=>{
       if(err){
         res.send({message:"An error occured",success:false});
@@ -89,7 +98,6 @@ module.exports = app => {
    /*                                        TECH GIVES FEEDBACK REGARDING TASK                                                               */
   app.post('/technician/feedback/:id',(req,res)=>{
     let tech_feedback=req.body.tech_feedback;
-    let id=req.params.id;
     const sql=`UPDATE work_request
             SET tech_feedback= ?
             WHERE id=${req.params.id}`;
