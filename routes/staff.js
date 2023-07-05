@@ -88,30 +88,22 @@ app.get('/staff/loggedRequests/:staff_id/',(req,res)=>{
   });
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*                                                       AUTHENTICATE STAFF NUMBER                                                                              */
-/*
-const schema= Joi.object({
-  staff_id:Joi.number().integer().min(100000000).max(999999999).required()
-})*/
 
 app.post('/staff/authenticateStaffNumber',(req,res)=>{
 let staff_id=req.body.staff_id;///staff inputs their staff number
-/*const{error,value}=schema.validate(req.body);
-if(error){
-  //console.log(error);
-  res.send({
-    message:"invalid request"
-  })
-}*/
    console.log(staff_id);
-  const sql=`SELECT * FROM staff
-             WHERE staff_id=${staff_id}`;
+  const sql=`SELECT * FROM staff s,department d
+             WHERE s.staff_id=${staff_id}
+             AND s.department_id= d.department_id`;
   connection.query(sql,(err,result)=>{
       if(result.length>0){
            res.send({
             message:`Aunthentication completed for ${result[0].staff_name} ${result[0].staff_surname}!`,
             staff_id,
+            name:result[0].staff_name,
+            surname:result[0].staff_surname,
+            result,
             success:true
-            
                })
                console.log(`staff :${result[0].staff_name} ${result[0].staff_surname} logged in`)
       }

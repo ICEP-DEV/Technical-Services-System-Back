@@ -468,7 +468,7 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
    *                                        EXPORT CLOSED LOGS                                                       */
   app.get('/admin/export-closed',(req,res)=>{  
     const sql=`SELECT w.id  AS Reference_Number,
-              DATE_FORMAT(w.req_date, '%Y/%M/%d'),
+              DATE_FORMAT(w.req_date, '%Y/%M/%d') as date,
               w.category AS Category,
               s.campus AS Campus,
               d.department AS Department,
