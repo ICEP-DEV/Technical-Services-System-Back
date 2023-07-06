@@ -144,25 +144,56 @@ app.get('/admin/availableTechnician/:id',(req,res)=>{
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                                                      /*ASSIGN A TECHNICIAN*/
-app.post('/admin/assignTechnician/:id',(req,res)=>{
-  let tech_id=req.body.tech_id;
-  let admin_id=req.body.admin_id;
-  const sql=`UPDATE work_request 
-            SET progress='in-progress',
+app.post('/admin/assignTechnician/:id', (req, res) => {
+    let tech_id = req.body.tech_id;
+    let admin_id = req.body.admin_id;
+    let priority;
+    var expected_date = new Date(req.body.expected_date);
+     expected_date=expected_date.toJSON().slice(0, 10);
+     let assigned_date=new Date().toJSON().slice(0, 10);
+    
+     
+     //the function gets the num of days between 2 dates
+    function dateDiffInDays(a, b) {
+      const _MS_PER_DAY = 1000 * 60 * 60 * 24;
+      // Discard the time and time-zone information.
+      const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
+      const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+    
+      return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+    }
+   
+    difference = dateDiffInDays(expected_date, assigned_date);  
+    if(difference <=2){
+        priority='High';
+    }
+    else if(difference >3 && difference <=5){
+      priority='Medium';
+    }
+    else{
+      priority='Low';
+    }
+    const sql = `UPDATE work_request 
+            SET progress='assign',
                 tech_id='${tech_id}',
-                 assigned_date='${ new Date().toJSON().slice(0, 10)}',
+                 assigned_date='${assigned_date}',
+                 expected_date = '${expected_date}',
                  admin_id='${admin_id}'
             WHERE id='${req.params.id}'`
-  connection.query(sql,(err,result)=>{
-    if(err){
-      res.send({message:"An error occured",
-        success:false});
-  }
-  else{
-    res.send({message:'Technician assigned to task',success:true}); 
-   }
+    connection.query(sql, (err, result) => {
+      if (err) {
+        res.send({
+          message: "An error occured",
+          success: false
+        });
+        console.log({message: "An error occured", err})
+      }
+      else {
+        res.send({ message: 'Technician assigned to task', success: true });
+        console.log({ message: 'Technician assigned to task', success: true });
+      }
+    });
   });
-});
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                          VIEW TECHNICIAN PROGRESS                                                      */
  app.get('/admin/viewProgress/:id',(req,res)=>{
