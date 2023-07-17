@@ -717,4 +717,20 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
               WHERE w.staff_id=s.staff_id
               AND DATEDIFF(CURDATE(),w.assigned_date) <= DATEDIFF()`
   });
+
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  app.get('/admin/duplicates',(req,res)=>{
+      const sql=`SELECT w.id,w.category,venue,w.description,s.campus,w.req_date,COUNT(id) 
+                  FROM work_request w, staff s 
+                  WHERE MONTH(req_date) = MONTH(NOW()) and   YEAR(req_date) = YEAR(now())
+                  GROUP BY w.category,w.description
+                  HAVING COUNT(w.id) >10;`
+      connection.query(sql,(err,result)=>{
+        if(err){
+          res.send('Something went wrong with server')
+        }else{
+          res.send({result,success:true});
+        }
+      });           
+  });
 };
