@@ -25,7 +25,30 @@ module.exports=app=>{
         res.send(result)
       }
     });  
-   })             
+   })    
+   //////////////////////////////////////////////////////////
+   app.get('/hod/getDept-trackProgress/:hod_id', (req, res) => {
+    const sql = `SELECT     s.staff_name,
+                            w.description,
+                            w.venue,
+                            w.category,
+                            w.req_date,
+                            w.priority
+                   FROM work_request w,staff s,hod h
+                   WHERE w.staff_id=s.staff_id
+                   AND s.department_id = h.department_id
+              AND h.hod_id =${req.params.hod_id}`;
+    connection.query(sql, (err, result) => {
+      if (err) {
+        res.send({ message: `Process failed....` })
+      } if (result.length > 0) {
+        res.send(result)
+      }
+    });
+
+  });
+
+   
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // *                                              HOD LOGIN                                                                 */
 app.post('/hod/login',(req,res)=>{
