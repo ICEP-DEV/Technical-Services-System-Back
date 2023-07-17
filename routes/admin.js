@@ -154,7 +154,7 @@ app.post('/admin/assignTechnician/:id', (req, res) => {
     
      
      //the function gets the num of days between 2 dates
-    function dateDiffInDays(a, b) {
+    /*function dateDiffInDays(a, b) {
       const _MS_PER_DAY = 1000 * 60 * 60 * 24;
       // Discard the time and time-zone information.
       const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
@@ -172,7 +172,7 @@ app.post('/admin/assignTechnician/:id', (req, res) => {
     }
     else{
       priority='Low';
-    }
+    }*/
     const sql = `UPDATE work_request 
             SET progress='assign',
                 tech_id='${tech_id}',
@@ -191,6 +191,30 @@ app.post('/admin/assignTechnician/:id', (req, res) => {
       else {
         res.send({ message: 'Technician assigned to task', success: true });
         console.log({ message: 'Technician assigned to task', success: true });
+      }
+    });
+  });
+  /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /*SET PRIORITY*/
+  app.put('/admin/setPriority/:id', (req, res) => {
+    let data = {
+      // priority:req.body.priority,
+      expected_date: req.body.expected_date
+    };
+    console.log(req.body)
+
+    const sql_2 = `UPDATE work_request 
+            SET  expected_date='${req.body.expected_date}'
+            WHERE id='${req.params.id}'`;
+
+    connection.query(sql_2, (err2, result2) => {
+      if (err2) {
+        res.send({ message: `An error occured` });
+        console.log(err2);
+      }
+      else {
+        console.log({ result2, message: 'Priority of task set!' })
+        res.send({ message: 'Priority of task set!' });
       }
     });
   });
