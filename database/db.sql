@@ -442,6 +442,15 @@ INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,divi
 VALUES(25997850,'Tebogo','Zwane','0124345666','tebogoZwane@tut.ac.za','male','available',5,'Soshanguve South','tebogo');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25007851,'Llyod','Kamp','0124345226','lloydokamp@tut.ac.za','male','available',6,'Soshanguve South','password');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25117851,'Neo','Tshabalala','0124332586','neo@tut.ac.za','male','available',7,'Soshanguve South','neo');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+VALUES(25117851,'Christopher','Tim','0124332236','christo@tut.ac.za','male','available',8,'Soshanguve South','neo');
+
+INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
 VALUES(25997936,'Xolile','Dube','0128745963','xoliDube@tut.ac.za','male','available',5,'Acardia','1xoli');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
@@ -454,7 +463,7 @@ INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,divi
 VALUES(25998851,'Mpho','Mashaba','012437752','Mpho234@tut.ac.za','male','available',5,'eMalahleni','mpho1');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
-VALUES(21990052,'Lesego','Radebe','012434496','MLes2@tut.ac.za','male','available',1,'eMalahleni','les1');
+VALUES(21990052,'Lesego','Radebe','012434496','MLes2@tut.ac.za','male','available',9,'Soshanguve South','les1');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
 VALUES(21894865,'Leon','Railey','012437891','raileyL@tut.ac.za','male','available',5,'Pretoria','1234');
@@ -469,7 +478,7 @@ INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,divi
 VALUES(21918965,'Katlego','Maboe','012438576','lats@tut.ac.za','male','available',2,'Acardia','katzxe');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
-VALUES(21518934,'Khumo','Seadimo','012438895','khumo34@tut.ac.za','male','available',2,'Polokwane','khum0');
+VALUES(21518934,'Khumo','Seadimo','012438895','khumo34@tut.ac.za','male','available',8,'Polokwane','khum0');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
 VALUES(21911168,'Katlego','Maboe','012438576','lats@tut.ac.za','male','available',2,'Acardia','777');
@@ -493,16 +502,16 @@ INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,divi
 VALUES(21616051,'Jimmy','Moloko','012789123','JIM@tut.ac.za','male','available',2,'Ga-rankuwa','lesedi');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
-VALUES(21916011,'Jonathan','Bayers','012778123','jona@tut.ac.za','male','available',5,'Ga-rankuwa','jon');
+VALUES(21916011,'Jonathan','Bayers','012778123','jona@tut.ac.za','male','available',7,'Ga-rankuwa','jon');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
-VALUES(21918052,'Phil','Matjila','012789123','pmatjila@tut.ac.za','male','available',6,'Ga-rankuwa','4857');
+VALUES(21918052,'Phil','Matjila','012789123','pmatjila@tut.ac.za','male','available',4,'Soshanguve South','4857');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
 VALUES(21913457,'Jason','Khubeka','012778103','jasonk@tut.ac.za','male','available',5,'Pretoria','jason');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
-VALUES(21913458,'Jason','Khubeka','012778103','jasonk@tut.ac.za','male','available',1,'Arcadia','jason');
+VALUES(21913458,'Jason','Khubeka','012778103','jasonk@tut.ac.za','male','available',10,'Soshanguve South','jason');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
 VALUES(21933400,'Jerah','Cliff','012718113','jasonk@tut.ac.za','male','available',6,'Polokwane','jerah1');

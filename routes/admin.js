@@ -391,7 +391,8 @@ app.post('/admin/login',(req,res)=>{
          res.send({
             message:`Hello ${result[0].admin_name} ${result[0].admin_surname}, You've Successfully logged in!`,
             admin_id,
-            success:true
+            success:true,
+            result
           });
           console.log(result);
       }
@@ -720,7 +721,7 @@ app.get('/admin/getTotalClossedLogs',(req,res)=>{
 
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   app.get('/admin/duplicates',(req,res)=>{
-      const sql=`SELECT w.id,w.category,venue,w.description,s.campus,w.req_date,COUNT(id) 
+      const sql=`SELECT w.id,w.category,venue,w.description,s.campus,COUNT(id) 
                   FROM work_request w, staff s 
                   WHERE MONTH(req_date) = MONTH(NOW()) and   YEAR(req_date) = YEAR(now())
                   GROUP BY w.category,w.description

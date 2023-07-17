@@ -53,8 +53,9 @@ module.exports = app => {
     let password=req.body.password;
     console.log(req.body)
     const sql=`SELECT * 
-              FROM technician 
-              WHERE tech_id="${tech_id}"`;
+              FROM technician t,division d
+              WHERE tech_id="${tech_id}"
+              AND t.division_id =d.id `;
     connection.query(sql,(err,result)=>{
       if(result.length>0){
         if(result[0].password == password){
