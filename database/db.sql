@@ -448,7 +448,7 @@ INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,divi
 VALUES(25117851,'Neo','Tshabalala','0124332586','neo@tut.ac.za','male','available',7,'Soshanguve South','neo');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
-VALUES(25117851,'Christopher','Tim','0124332236','christo@tut.ac.za','male','available',8,'Soshanguve South','neo');
+VALUES(25227051,'Christopher','Tim','0124332236','christo@tut.ac.za','male','available',8,'Soshanguve South','neo');
 
 INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
 VALUES(25997936,'Xolile','Dube','0128745963','xoliDube@tut.ac.za','male','available',5,'Acardia','1xoli');
