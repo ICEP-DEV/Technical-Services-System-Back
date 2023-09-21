@@ -5,7 +5,7 @@ const cors=require('cors');
 
 const app=express();
 app.use(cors());
-app.set('port',3000);
+app.set('port',3030);
 
 app.use(express.json());
 app.use(bodyParser.json());

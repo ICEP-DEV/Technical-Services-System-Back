@@ -418,11 +418,11 @@ module.exports = app => {
       if (err) throw err;
 
       if (results.length > 0) {
-        res.send({results, success:true})
+        res.send({ results, success: true })
       }
       else {
         console.log("No results found")
-       res.send({message:"No results found", success:false})
+        res.send({ message: "No results found", success: false })
       }
     })
   })
@@ -733,4 +733,42 @@ module.exports = app => {
               WHERE w.staff_id=s.staff_id
               AND DATEDIFF(CURDATE(),w.assigned_date) <= DATEDIFF()`
   });
+
+
+
+  app.post('/add_new_tech', (req, res) => {
+
+    var sql = "select * from technician where tech_id=?"
+    connection.query(sql, req.body.tech_id, (error, rows) => {
+      if (error) throw error
+      if (rows.length > 0) {
+        res.send({ message: "User already exist", success: false })
+      }
+      else {
+        var sql = `INSERT INTO technician(tech_id,name,surname,phone,email,gender,availability,division_id,campus,password)
+              VALUES(?,?,?,?,?,?,?,?,?,?)`
+        var tech_body = [req.body.tech_id, req.body.name, req.body.surname, req.body.phone, req.body.email, req.body.gender, 'available', req.body.division_id, req.body.campus, ""]
+        connection.query(sql, tech_body, (err, results) => {
+          if (err) throw err
+          if(results.affectedRows === 1){
+          res.send({ message: "Successfully added to the system", success:true })
+          }
+          else{
+            res.send({ message: "Unable to add to the system", success:false })
+          }
+
+        })
+      }
+    })
+  })
+
+  app.get('/alldivisions',(req,res)=>{
+    var sql = 'select * from division'
+
+    connection.query(sql,(err,results)=>{
+      if(err) throw err
+      res.send({success:true, results})
+    })
+  } )
+  
 };
