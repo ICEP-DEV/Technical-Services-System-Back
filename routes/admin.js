@@ -187,21 +187,32 @@ module.exports = app => {
   app.post('/admin/assignTechnician/:id', (req, res) => {
     let tech_id = req.body.tech_id;
     let admin_id = req.body.admin_id;
+    var expected_date = new Date(req.body.expected_date)
+    console.log(expected_date)
+    console.log(new Date())
     const sql = `UPDATE work_request 
-            SET progress='in-progress',
-                tech_id='${tech_id}',
-                 assigned_date='${new Date().toJSON().slice(0, 10)}',
-                 admin_id='${admin_id}'
-            WHERE id='${req.params.id}'`
+          SET progress='in-progress',
+              tech_id='${tech_id}',
+               assigned_date='${new Date().toJSON().slice(0, 10)}',
+               expected_date ='${expected_date.toJSON().slice(0, 10)}',
+               admin_id='${admin_id}'
+          WHERE id='${req.params.id}'`
+    console.log(sql)
     connection.query(sql, (err, result) => {
       if (err) {
+        console.log(err)
         res.send({
           message: "An error occured",
           success: false
         });
       }
-      else {
+      if (result.affectedRows > 0) {
+        console.log({ message: 'Technician assigned to task', success: true })
         res.send({ message: 'Technician assigned to task', success: true });
+      }
+      else {
+        res.send({ message: 'Technician is bot assigned to task', success: false });
+
       }
     });
   });
