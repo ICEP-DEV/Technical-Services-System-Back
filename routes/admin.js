@@ -37,8 +37,8 @@ module.exports = app => {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**VIEW ALL REQUESTS IN SYSTEM */
   app.get("/admin/requests", (req, res) => {
-    sql = `SELECT id, description, DATE_FORMAT(req_date, '%Y/%M/%d') as req_date, category,priority,venue,progress,staff_feedback,tech_feedback,
-                rating,status,DATE_FORMAT(completed_date, '%Y/%M/%d') as completed_date,DATE_FORMAT(assigned_date, '%Y/%M/%d') AS assigned_date,admin_id,tech_id,staff_id 
+    sql = `SELECT id, description, DATE_FORMAT(req_date, '%Y/%b/%d') as req_date, category,priority,venue,progress,staff_feedback,tech_feedback,
+                rating,status,DATE_FORMAT(completed_date, '%Y/%b/%d') as completed_date,DATE_FORMAT(assigned_date, '%Y/%b/%d') AS assigned_date,admin_id,tech_id,staff_id 
         FROM work_request 
         ORDER BY req_date DESC`;
     connection.query(sql, (err, result) => {
@@ -72,8 +72,8 @@ module.exports = app => {
   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /*VIEWS ALL ACTIVE AND UNASSIGNED REQUESTS*/
   app.get('/admin/viewAll', (req, res) => {
-    const sql = `SELECT  id, description, DATE_FORMAT(req_date, '%Y/%M/%d') as req_date, category,priority,venue,progress,staff_feedback,tech_feedback,
-              rating,status,DATE_FORMAT(completed_date, '%Y/%M/%d') as completed_date,DATE_FORMAT(assigned_date, '%Y/%M/%d') AS assigned_date,admin_id,tech_id,staff_id  
+    const sql = `SELECT  id, description, DATE_FORMAT(req_date, '%Y/%b/%d') as req_date, category,priority,venue,progress,staff_feedback,tech_feedback,
+              rating,status,DATE_FORMAT(completed_date, '%Y/%b/%d') as completed_date,DATE_FORMAT(assigned_date, '%Y/%b/%d') AS assigned_date,admin_id,tech_id,staff_id  
               FROM work_request 
               WHERE status='active' 
               AND tech_id IS NULL
@@ -240,9 +240,12 @@ module.exports = app => {
   ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /*                                                  VIEW IN-PROGRESS TASKS                                                                    */
   app.get('/admin/viewInProgressTasks', (req, res) => {
-    const sql = `SELECT l.id,l.description,t.name,l.progress,s.staff_name 
-            FROM technician t,work_request l,staff s 
-            WHERE l.tech_id=t.tech_id AND l.staff_id=s.staff_id AND l.progress='in-progress' `;
+    const sql = `SELECT l.id,l.description,CONCAT(Substring(t.name,1,1),' ', t.surname) as tech_name,l.progress,CONCAT(Substring(s.staff_name,1,1),' ', s.staff_surname) as staff_name, 
+    DATE_FORMAT(req_date, '%Y/%b/%d')as req_date, DATE_FORMAT(expected_date, '%Y/%b/%d') as expected_date, priority, venue, DATEDIFF(expected_date, CURRENT_DATE) AS count_duration 
+    FROM technician t,work_request l,staff s 
+    WHERE l.tech_id=t.tech_id 
+    AND l.staff_id=s.staff_id 
+    AND l.progress='in-progress' `;
     connection.query(sql, (err, result) => {
       if (err) {
         res.send({ message: `An error occured`, success: false });
@@ -513,7 +516,7 @@ module.exports = app => {
   /*EXPORT ALL REQUEST TO EXCEL*/
   app.get('/admin/export', (req, res) => {
     const sql = `SELECT w.id  AS Reference_Number,
-                      DATE_FORMAT(w.req_date, '%Y/%M/%d'),
+                      DATE_FORMAT(w.req_date, '%Y/%b/%d'),
                       w.category AS Category,
                       s.campus AS Campus,
                       d.department AS Department,
@@ -542,7 +545,7 @@ module.exports = app => {
    *                                        EXPORT CLOSED LOGS                                                       */
   app.get('/admin/export-closed', (req, res) => {
     const sql = `SELECT w.id  AS Reference_Number,
-              DATE_FORMAT(w.req_date, '%Y/%M/%d'),
+              DATE_FORMAT(w.req_date, '%Y/%b/%d'),
               w.category AS Category,
               s.campus AS Campus,
               d.department AS Department,
@@ -623,7 +626,7 @@ module.exports = app => {
     const sql = `SELECT w.id,
                           s.staff_name,
                           s.staff_surname,
-                          DATE_FORMAT(w.req_date, '%Y/%M/%d'),
+                          DATE_FORMAT(w.req_date, '%Y/%b/%d'),
                           w.category,
                           w.status,
                           w.progress
@@ -750,11 +753,11 @@ module.exports = app => {
         var tech_body = [req.body.tech_id, req.body.name, req.body.surname, req.body.phone, req.body.email, req.body.gender, 'available', req.body.division_id, req.body.campus, ""]
         connection.query(sql, tech_body, (err, results) => {
           if (err) throw err
-          if(results.affectedRows === 1){
-          res.send({ message: "Successfully added to the system", success:true })
+          if (results.affectedRows === 1) {
+            res.send({ message: "Successfully added to the system", success: true })
           }
-          else{
-            res.send({ message: "Unable to add to the system", success:false })
+          else {
+            res.send({ message: "Unable to add to the system", success: false })
           }
 
         })
@@ -762,13 +765,13 @@ module.exports = app => {
     })
   })
 
-  app.get('/alldivisions',(req,res)=>{
+  app.get('/alldivisions', (req, res) => {
     var sql = 'select * from division'
 
-    connection.query(sql,(err,results)=>{
-      if(err) throw err
-      res.send({success:true, results})
+    connection.query(sql, (err, results) => {
+      if (err) throw err
+      res.send({ success: true, results })
     })
-  } )
-  
+  })
+
 };

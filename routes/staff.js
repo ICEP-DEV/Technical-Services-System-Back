@@ -59,8 +59,8 @@ module.exports = app => {
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                                      VIEW MY REQUESTS                                                                  */
   app.get('/staff/loggedRequests/:staff_id/', (req, res) => {
-    const sql = `SELECT id,description,category, DATE_FORMAT(req_date, '%Y/%M/%d') as req_date,venue,progress,status,tech_id,
-                DATE_FORMAT(expected_date, '%Y/%M/%d') as expected_date,DATE_FORMAT(assigned_date, '%Y/%M/%d') AS assigned_date
+    const sql = `SELECT id,description,category, DATE_FORMAT(req_date, '%Y/%b/%d') as req_date,venue,progress,status,tech_id,
+                DATE_FORMAT(expected_date, '%Y/%b/%d') as expected_date,DATE_FORMAT(assigned_date, '%Y/%b/%d') AS assigned_date, DATEDIFF(expected_date, CURRENT_DATE) AS count_duration
             FROM work_request
             WHERE staff_id ="${req.params.staff_id}"
             AND status='active'
@@ -97,17 +97,11 @@ module.exports = app => {
 
   app.post('/staff/authenticateStaffNumber', (req, res) => {
     let staff_id = req.body.staff_id;///staff inputs their staff number
-    /*const{error,value}=schema.validate(req.body);
-    if(error){
-      //console.log(error);
-      res.send({
-        message:"invalid request"
-      })
-    }*/
-    console.log(staff_id);
+    
     const sql = `SELECT * FROM staff
              WHERE staff_id=${staff_id}`;
     connection.query(sql, (err, result) => {
+      if(err) console.log(err);
       if (result.length > 0) {
         res.send({
           message: `Aunthentication completed for ${result[0].staff_name} ${result[0].staff_surname}!`,
