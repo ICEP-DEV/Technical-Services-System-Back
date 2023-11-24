@@ -77,7 +77,7 @@ module.exports = app => {
                                             /*VIEWS ALL ACTIVE AND UNASSIGNED REQUESTS*/
   app.get('/admin/viewAll',(req,res)=>{
     const sql=`SELECT  id, description, DATE_FORMAT(req_date, '%Y/%M/%d') as req_date, category,priority,venue,progress,staff_feedback,tech_feedback,
-              rating,status,DATE_FORMAT(completed_date, '%Y/%M/%d') as completed_date,DATE_FORMAT(assigned_date, '%Y/%M/%d') AS assigned_date,admin_id,tech_id,staff_id  
+              rating,status,DATE_FORMAT(completed_date, '%Y/%M/%d') as completed_date,DATE_FORMAT(assigned_date, '%Y/%M/%d') AS assigned_date,DATE_FORMAT(expected_date, '%Y/%M/%d') AS expected_date,admin_id,tech_id,staff_id  
               FROM work_request 
               WHERE status='active' 
               AND tech_id IS NULL
@@ -180,10 +180,13 @@ app.get('/admin/availableTechnician/:id',(req,res)=>{
 })            
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-                                                     /*ASSIGN A TECHNICIAN*/
+global.arlet = '';           
+// let arlet='';                                    /*ASSIGN A TECHNICIAN*/
 app.post('/admin/assignTechnician/:id',(req,res)=>{
   let tech_id=req.body.tech_id;
   let admin_id=req.body.admin_id;
+  let id=tech_id;
+  // let arlet=''; 
   const sql=`UPDATE work_request 
             SET progress='in-progress',
                 tech_id='${tech_id}',
@@ -196,10 +199,45 @@ app.post('/admin/assignTechnician/:id',(req,res)=>{
         success:false});
   }
   else{
+    global.arlet =true;
     res.send({message:'Technician assigned to task',success:true}); 
    }
   });
 });
+  ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+  /**                                     TECHNICIAN VIEWS TASKS ASSIGNED THEM                                                    */  
+  app.get('/adminTo/technician/tasks/:tech_id',async(req,res)=>{
+    // const tech_id = req.params.tech_id;
+      //  SELECT t.tech_id,w.id,w.category,w.description, w.priority,w.expected_date, w.venue,w.progress
+  //  FROM work_request w,technician t 
+  //  WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}'
+      const sql=` SELECT tech_id,id, category, description, priority, expected_date, venue, progress
+      FROM work_request
+      WHERE tech_id = '${req.params.tech_id}' AND updated_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
+      ORDER BY updated_at DESC
+      LIMIT 1`
+   
+      connection.query(sql,async (err,result)=>{
+      // global.arlet=true;
+          if(err){
+            await res.send({message:"An error occured",success:false});
+          }else{
+            if(global.arlet){
+              // console.log( global.arlet)
+               await res.send({result,success:true,arlet:global.arlet});
+        
+              global.arlet = ''; // Reset the global variable after using it
+            }else{
+              await res.send({message:"no new tasks",success:false})
+            }
+            
+          }  
+      })
+   
+    // global.arlet = '';
+   })
+
+
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                          VIEW TECHNICIAN PROGRESS                                                      */
  app.get('/admin/viewProgress/:id',(req,res)=>{
@@ -220,7 +258,7 @@ app.post('/admin/assignTechnician/:id',(req,res)=>{
    //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  /**                                          VIEW FEEDBACK fFROM BOTH STAFF AND TECHNICIAN                                                    */
  app.get('/admin/viewFeedback',(req,res)=> {
-  const sql=`SELECT s.staff_name,s.staff_surname,w.staff_feedback,w.tech_feedback,w.rating,t.name,t.surname
+  const sql=`SELECT s.staff_name,s.staff_surname,w.staff_feedback,w.tech_feedback,w.rating,t.name,t.surname,w.progress,w.id
              FROM staff s,work_request w,technician t
              WHERE s.staff_id=w.staff_id AND t.tech_id=w.tech_id`;
   connection.query(sql,(err,result)=>{

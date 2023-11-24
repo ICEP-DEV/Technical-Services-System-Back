@@ -83,7 +83,7 @@ app.get('/staff/checkStatus',(req,res)=>{
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                                      VIEW MY REQUESTS                                                                  */
 app.get('/staff/loggedRequests/:staff_id/',(req,res)=>{
-    const sql=`SELECT id,description,category,req_date,venue,progress,status,tech_id
+    const sql=`SELECT id,description,category,req_date,venue,progress,status,tech_id,expected_date
             FROM work_request
             WHERE staff_id ="${req.params.staff_id}"
             AND status='active'
