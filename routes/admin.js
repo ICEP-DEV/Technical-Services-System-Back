@@ -211,7 +211,7 @@ app.post('/admin/assignTechnician/:id',(req,res)=>{
       //  SELECT t.tech_id,w.id,w.category,w.description, w.priority,w.expected_date, w.venue,w.progress
   //  FROM work_request w,technician t 
   //  WHERE w.tech_id = t.tech_id AND w.tech_id='${req.params.tech_id}'
-      const sql=` SELECT tech_id,id, category, description, priority, expected_date, venue, progress
+      const sql=` SELECT tech_id,id, category, description, priority, expected_date, venue, progress,assigned_date,progress
       FROM work_request
       WHERE tech_id = '${req.params.tech_id}' AND updated_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
       ORDER BY updated_at DESC
