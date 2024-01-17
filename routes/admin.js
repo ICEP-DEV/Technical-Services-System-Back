@@ -183,7 +183,7 @@ module.exports = app => {
   })
 
   //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-  /*ASSIGN A TECHNICIAN*/
+  /*ASSIGN A TECHNICIAN*/ 
   app.post('/admin/assignTechnician/:id', (req, res) => {
     let tech_id = req.body.tech_id;
     let admin_id = req.body.admin_id;
@@ -199,7 +199,7 @@ module.exports = app => {
                admin_id='${admin_id}'
           WHERE id='${req.params.id}'`
     console.log(sql)
-    /*
+    
     connection.query(sql, (err, result) => {
       if (err) {
         console.log(err)
@@ -217,7 +217,7 @@ module.exports = app => {
 
       }
     });
-    */
+    
   });
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                          VIEW TECHNICIAN PROGRESS                                                      */
