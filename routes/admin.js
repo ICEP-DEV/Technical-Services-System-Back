@@ -187,6 +187,7 @@ module.exports = app => {
   app.post('/admin/assignTechnician/:id', (req, res) => {
     let tech_id = req.body.tech_id;
     let admin_id = req.body.admin_id;
+    console.log('before',req.body.expected_date)
     var expected_date = new Date(req.body.expected_date)
     console.log(expected_date)
     console.log(new Date())
@@ -198,6 +199,7 @@ module.exports = app => {
                admin_id='${admin_id}'
           WHERE id='${req.params.id}'`
     console.log(sql)
+    /*
     connection.query(sql, (err, result) => {
       if (err) {
         console.log(err)
@@ -215,6 +217,7 @@ module.exports = app => {
 
       }
     });
+    */
   });
   ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
   /**                                          VIEW TECHNICIAN PROGRESS                                                      */
