@@ -320,7 +320,19 @@ app.get('/admin/viewCompletedTasks',(req,res)=>{
   }
   });
  });
+////////get all divisions/////////////////////////
 
+app.get('/alldivisions',(req,res)=>{
+  const sql=`SELECT *
+            FROM division `;
+  connection.query(sql,(err,result)=>{
+   if(err){
+     res.send({message:`Process failed...`});
+   }if(result.length>0){
+   res.send(result);
+  }
+  });
+ });
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                                 ADD  TECHNICIAN                                                                                */
@@ -340,7 +352,7 @@ app.post('/admin/addTechnician',(req,res)=>{
     if(err){
       throw err;
     }
-    if(result.length>0){
+    else{
     res.send({message:'Technician Added'});
     }
      });
@@ -348,7 +360,7 @@ app.post('/admin/addTechnician',(req,res)=>{
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**                                             VIEW ALL TECHNICIANS IN THE SYSTEM                                                             */
 app.get('/admin/viewAllTechnicians',(req,res)=>{
-  const sql= `SELECT t.tech_id,t.name,t.surname,t.phone,t.email,d.division_name  
+  const sql= `SELECT t.tech_id,t.name,t.surname,t.phone,t.email,d.division_name,t.availability,t.campus 
               FROM technician t,division d
               WHERE t.division_id =d.id`;
   connection.query(sql,(err,result)=>{
