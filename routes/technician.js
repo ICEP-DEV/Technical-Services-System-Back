@@ -22,24 +22,57 @@ module.exports = app => {
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**                                     TECHNICIAN UPDATE THEIR PROGRESS OF TASK                                                 */
+    global.arlet = '';        
+  global.id='';
   app.put('/technician/updateTask/:id',(req,res)=>{
     let progress=req.body.progress;
     let sql;
+    id=req.params.id;
+    global.id=id;
     if(progress=='complete'){
       sql=`UPDATE work_request SET progress=?,completed_date='${ new Date().toJSON().slice(0, 10)}' 
-      WHERE id='${req.params.id}' `
+      WHERE id='${id}' `
+   
     }else{
       sql=`UPDATE work_request SET progress=? 
-              WHERE id='${req.params.id}' `;
+              WHERE id='${id}' `;
      }
     connection.query(sql,progress,(err,result)=>{
       if(err){
           res.send({message:"An error occured",success:false});
       }
-      res.send({message:"Progress updated!",success:true
-    });
+      global.arlet =true;
+      res.send({message:"Progress updated!",success:true});
     })
   })
+
+   /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**                                     set alert to staff and admin about task status                                            */
+    app.get('/technician/task/:staff_id',(req,res)=>{
+      const sql=`SELECT id,staff_id,category,description, priority,expected_date, venue,progress,assigned_date
+                FROM work_request 
+                WHERE staff_id='${req.params.staff_id}' AND id='${global.id}'`
+              
+      connection.query(sql,async(err,result)=>{
+        if(err){
+          res.send({message:"An error occured",success:false});
+        }
+
+        if( global.arlet  ){
+          console.log("id",global.id,result);
+          res.send({result,arlet:global.arlet});
+         
+          global.arlet = ''; // Reset the global variable after using it
+          
+          global.id='';
+        }else{
+          await res.send({message:"no new tasks",success:false})
+        }
+      })
+    
+     })
+
+
      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /**                                     TECHNICIAN LOG-IN AUTHENTICATION                                                */
    app.post('/technician/login',(req,res)=>{
