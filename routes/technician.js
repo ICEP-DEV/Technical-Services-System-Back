@@ -24,6 +24,7 @@ module.exports = app => {
     /**                                     TECHNICIAN UPDATE THEIR PROGRESS OF TASK                                                 */
     global.arlet = '';        
   global.id='';
+  global.ids='';
   app.put('/technician/updateTask/:id',(req,res)=>{
     let progress=req.body.progress;
     let sql;
@@ -47,7 +48,7 @@ module.exports = app => {
   })
 
    /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /**                                     set alert to staff and admin about task status                                            */
+    /**                                     set alert to staff and admin about task status to staff                                        */
     app.get('/technician/task/:staff_id',(req,res)=>{
       const sql=`SELECT id,staff_id,category,description, priority,expected_date, venue,progress,assigned_date
                 FROM work_request 
@@ -65,6 +66,32 @@ module.exports = app => {
           global.arlet = ''; // Reset the global variable after using it
           
           global.id='';
+        }else{
+          await res.send({message:"no new tasks",success:false})
+        }
+      })
+    
+     })
+
+     /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /**                                     set alert to staff and admin about task status to admin                                      */
+    app.get('/technician/task',(req,res)=>{
+      const sql=`SELECT id,staff_id,category,description, priority,expected_date, venue,progress,assigned_date
+                FROM work_request 
+                WHERE  id='${global.ids}'`
+              
+      connection.query(sql,async(err,result)=>{
+        if(err){
+          res.send({message:"An error occured",success:false});
+        }
+
+        if( global.arlet  ){
+          console.log("id",global.ids,result);
+          res.send({result,arlet:global.arlet});
+         
+          global.arlet = ''; // Reset the global variable after using it
+          
+          global.ids='';
         }else{
           await res.send({message:"no new tasks",success:false})
         }
